@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { cn } from "./utils/tailwind-utils";
 import EventOverview from "./components/event-overview";
 import { IEvent } from "./models/event";
+import getGoogleOAuthURL from "./utils/google-utils";
 
 export default function Home() {
   const [colorIndex, setColorIndex] = useState(0);
@@ -68,6 +69,9 @@ export default function Home() {
           <span>.IO</span>
         </h1>
         <EventOverview event={mockEvent} />
+        <a href={getGoogleOAuthURL()} className="text-blue-500">
+          Login Here...
+        </a>
       </div>
     </main>
   );

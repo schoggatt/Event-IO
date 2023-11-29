@@ -1,6 +1,7 @@
 import { RowDataPacket } from "mysql2";
+import { BaseModel } from "./base";
 
-export interface Event extends RowDataPacket {
+export interface Event extends RowDataPacket, BaseModel {
   eventKey: number;
   name: string;
   description: string;
