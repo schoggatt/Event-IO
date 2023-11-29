@@ -1,9 +1,12 @@
-import express, { Application } from "express";
+import express from "express";
 import Server from "./src/index";
+import swaggerDocs from "./src/utils/swagger";
 
-const app: Application = express();
+const app = express();
 const server: Server = new Server(app);
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;
+
+swaggerDocs(app, PORT);
 
 app
   .listen(PORT, "localhost", function () {

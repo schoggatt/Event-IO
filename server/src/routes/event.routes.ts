@@ -10,26 +10,94 @@ class EventRoutes {
   }
 
   intializeRoutes() {
-    // // Create a new Tutorial
-    // this.router.post("/", this.controller.create);
+    /**
+     * @openapi
+     * /api/events/:
+     *  post:
+     *     tags:
+     *     - Events
+     *     description: TODO
+     *     responses:
+     *       200:
+     *         description: TODO
+     */
+    this.router.post("/", this.controller.create);
 
-    // Retrieve all Tutorials
+    /**
+     * @openapi
+     * /api/events/:
+     *  get:
+     *     tags:
+     *     - Events
+     *     description: TODO
+     *     responses:
+     *       200:
+     *         description: TODO
+     */
     this.router.get("/", this.controller.retrieveAll);
 
-    // // Retrieve all published Tutorials
-    // this.router.get("/published", this.controller.findAllPublished);
+    /**
+     * @openapi
+     * /api/events/{eventKey}:
+     *  get:
+     *     tags:
+     *     - Events
+     *     description: Get an event by key
+     *  summary: Get an event by key
+     *  parameters:
+     *      - name: eventKey
+     *        in: path
+     *        description: The key of the event
+     *        required: true
+     *  responses:
+     *     200:
+     *       description: TODO
+     */
+    this.router.get("/:eventKey", this.controller.retrieveById);
 
-    // // Retrieve a single Tutorial with id
-    // this.router.get("/:id", this.controller.findOne);
+    /**
+     * @openapi
+     * /api/events/:
+     *  put:
+     *     tags:
+     *     - Events
+     *     description: TODO
+     *     responses:
+     *       200:
+     *         description: TODO
+     */
+    this.router.put("/", this.controller.update);
 
-    // // Update a Tutorial with id
-    // this.router.put("/:id", this.controller.update);
+    /**
+     * @openapi
+     * /api/events/{eventKey}:
+     *  delete:
+     *     tags:
+     *     - Events
+     *  summary: Delete an event by key
+     *  parameters:
+     *      - name: eventKey
+     *        in: path
+     *        description: The key of the event
+     *        required: true
+     *  responses:
+     *     200:
+     *       description: TODO
+     */
+    this.router.delete("/:eventKey", this.controller.delete);
 
-    // // Delete a Tutorial with id
-    // this.router.delete("/:id", this.controller.delete);
-
-    // // Delete all Tutorials
-    // this.router.delete("/", this.controller.deleteAll);
+    /**
+     * @openapi
+     * /api/events/:
+     *  delete:
+     *     tags:
+     *     - Events
+     *     description: TODO
+     *     responses:
+     *       200:
+     *         description: TODO
+     */
+    this.router.delete("/", this.controller.deleteAll);
   }
 }
 

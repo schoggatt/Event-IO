@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
 
-export function welcome(req: Request, res: Response): Response {
-  return res.json({ message: "Welcome to the event io server." });
+export function healthCheck(req: Request, res: Response): Response {
+  return res.json({ message: "Server is running..." });
 }

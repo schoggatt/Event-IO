@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { welcome } from "../controllers/home.controller";
+import { healthCheck } from "../controllers/home.controller";
 
 class HomeRoutes {
   router = Router();
@@ -8,8 +8,19 @@ class HomeRoutes {
     this.intializeRoutes();
   }
 
+  /**
+   * @openapi
+   * /api/healthcheck:
+   *  get:
+   *     tags:
+   *     - Healthcheck
+   *     description: Responds if the app is up and running
+   *     responses:
+   *       200:
+   *         description: App is up and running
+   */
   intializeRoutes() {
-    this.router.get("/", welcome);
+    this.router.get("/healthcheck", healthCheck);
   }
 }
 

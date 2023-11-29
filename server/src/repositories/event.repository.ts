@@ -1,18 +1,34 @@
+import { ResultSetHeader } from "mysql2";
 import connection from "../db";
 import { IEvent } from "../models/event.interface";
 
 interface IEventRepository {
-  save(tutorial: IEvent): Promise<IEvent>;
+  create(event: IEvent): Promise<IEvent>;
   retrieveAll(): Promise<IEvent[]>;
-  retrieveById(tutorialId: number): Promise<IEvent | undefined>;
-  update(tutorial: IEvent): Promise<number>;
-  delete(tutorialId: number): Promise<number>;
+  retrieveByKey(eventKey: number): Promise<IEvent | undefined>;
+  update(event: IEvent): Promise<number>;
+  delete(eventKey: number): Promise<number>;
   deleteAll(): Promise<number>;
 }
 
 class EventRepository implements IEventRepository {
-  save(tutorial: IEvent): Promise<IEvent> {
-    throw new Error("Method not implemented.");
+  create(event: IEvent): Promise<IEvent> {
+    return new Promise((resolve, reject) => {
+      connection.query<ResultSetHeader>(
+        "INSERT INTO events (name, description, location, imageSource, externalSource) VALUES (?, ?, ?, ?, ?)",
+        [
+          event.name,
+          event.description,
+          event.location,
+          event.imageSource,
+          event.externalSource,
+        ],
+        (err, res) => {
+          if (err) reject(err);
+          else resolve({ ...event });
+        }
+      );
+    });
   }
 
   retrieveAll(): Promise<IEvent[]> {
@@ -26,17 +42,58 @@ class EventRepository implements IEventRepository {
     });
   }
 
-  retrieveById(tutorialId: number): Promise<IEvent | undefined> {
-    throw new Error("Method not implemented.");
+  retrieveByKey(eventKey: number): Promise<IEvent | undefined> {
+    return new Promise((resolve, reject) => {
+      connection.query<IEvent[]>(
+        "SELECT * FROM events WHERE eventKey = ?",
+        [eventKey],
+        (err, res) => {
+          if (err) reject(err);
+          else resolve(res?.[0]);
+        }
+      );
+    });
   }
-  update(tutorial: IEvent): Promise<number> {
-    throw new Error("Method not implemented.");
+
+  update(event: IEvent): Promise<number> {
+    return new Promise((resolve, reject) => {
+      connection.query<ResultSetHeader>(
+        "UPDATE events SET name = ?, description = ?, location = ?, imageSource = ?, externalSource = ?, WHERE eventKey = ?",
+        [
+          event.name,
+          event.description,
+          event.location,
+          event.imageSource,
+          event.externalSource,
+        ],
+        (err, res) => {
+          if (err) reject(err);
+          else resolve(res.affectedRows);
+        }
+      );
+    });
   }
-  delete(tutorialId: number): Promise<number> {
-    throw new Error("Method not implemented.");
+
+  delete(eventKey: number): Promise<number> {
+    return new Promise((resolve, reject) => {
+      connection.query<ResultSetHeader>(
+        "DELETE FROM events WHERE eventKey = ?",
+        [eventKey],
+        (err, res) => {
+          if (err) reject(err);
+          else resolve(res.affectedRows);
+        }
+      );
+    });
   }
+
   deleteAll(): Promise<number> {
-    throw new Error("Method not implemented.");
+    return new Promise((resolve, reject) => {
+      connection.query<ResultSetHeader>("DELETE FROM events", (err, res) => {
+        if (err) reject(err);
+        else resolve(res.affectedRows);
+      });
+    });
   }
 }
 
