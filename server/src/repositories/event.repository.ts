@@ -1,18 +1,18 @@
 import { ResultSetHeader } from "mysql2";
 import connection from "../db";
-import { IEvent } from "../models/event.interface";
+import { Event } from "../models/event";
 
-interface IEventRepository {
-  create(event: IEvent): Promise<IEvent>;
-  retrieveAll(): Promise<IEvent[]>;
-  retrieveByKey(eventKey: number): Promise<IEvent | undefined>;
-  update(event: IEvent): Promise<number>;
+interface EventRepository {
+  create(event: Event): Promise<Event>;
+  retrieveAll(): Promise<Event[]>;
+  retrieveByKey(eventKey: number): Promise<Event | undefined>;
+  update(event: Event): Promise<number>;
   delete(eventKey: number): Promise<number>;
   deleteAll(): Promise<number>;
 }
 
-class EventRepository implements IEventRepository {
-  create(event: IEvent): Promise<IEvent> {
+class EventRepository implements EventRepository {
+  create(event: Event): Promise<Event> {
     return new Promise((resolve, reject) => {
       connection.query<ResultSetHeader>(
         "INSERT INTO events (name, description, location, imageSource, externalSource) VALUES (?, ?, ?, ?, ?)",
@@ -31,20 +31,20 @@ class EventRepository implements IEventRepository {
     });
   }
 
-  retrieveAll(): Promise<IEvent[]> {
+  retrieveAll(): Promise<Event[]> {
     let query: string = "SELECT * FROM events";
 
     return new Promise((resolve, reject) => {
-      connection.query<IEvent[]>(query, (err, res) => {
+      connection.query<Event[]>(query, (err, res) => {
         if (err) reject(err);
         else resolve(res);
       });
     });
   }
 
-  retrieveByKey(eventKey: number): Promise<IEvent | undefined> {
+  retrieveByKey(eventKey: number): Promise<Event | undefined> {
     return new Promise((resolve, reject) => {
-      connection.query<IEvent[]>(
+      connection.query<Event[]>(
         "SELECT * FROM events WHERE eventKey = ?",
         [eventKey],
         (err, res) => {
@@ -55,7 +55,7 @@ class EventRepository implements IEventRepository {
     });
   }
 
-  update(event: IEvent): Promise<number> {
+  update(event: Event): Promise<number> {
     return new Promise((resolve, reject) => {
       connection.query<ResultSetHeader>(
         "UPDATE events SET name = ?, description = ?, location = ?, imageSource = ?, externalSource = ?, WHERE eventKey = ?",

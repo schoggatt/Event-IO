@@ -1,6 +1,6 @@
 import { RowDataPacket } from "mysql2";
 
-export interface IEvent extends RowDataPacket {
+export interface Event extends RowDataPacket {
   eventKey: number;
   name: string;
   description: string;

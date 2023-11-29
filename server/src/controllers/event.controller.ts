@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import eventRepository from "../repositories/event.repository";
-import { IEvent } from "../models/event.interface";
+import { Event } from "../models/event";
 
-// TODO: Need to check all of these items.
 export default class EventController {
   async create(req: Request, res: Response) {
-    const event: IEvent = req.body;
+    const event: Event = req.body;
     try {
       const newEvent = await eventRepository.create(event);
       if (newEvent) {
@@ -23,7 +22,7 @@ export default class EventController {
   }
 
   async update(req: Request, res: Response) {
-    const event: IEvent = req.body;
+    const event: Event = req.body;
     try {
       const updatedEvent = await eventRepository.update(event);
       if (updatedEvent) {
