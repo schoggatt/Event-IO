@@ -1,0 +1,32 @@
+// Generate schema: npx prisma generate
+// Create migration: npx prisma migrate dev --name init --create-only
+// Appy migration: npx prisma migrate deploy
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model Users {
+    id        Int      @id @default(autoincrement())
+    email     String   @unique
+    firstName String?
+    lastName  String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Events {
+    id          Int       @id @default(autoincrement())
+    name        String
+    description String?
+    location    String?
+    startDate   DateTime
+    endDate     DateTime?
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+}

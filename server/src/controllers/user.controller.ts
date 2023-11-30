@@ -66,13 +66,11 @@ export default class UserController {
       });
 
       const user = await userRepository.create({
-        userKey: 0,
+        id: 0,
         email: googleUser.email,
-        password: "",
         providerId: googleUser.id,
         firstName: googleUser.given_name,
         lastName: googleUser.family_name,
-        pictureSource: googleUser.picture,
         createdAt: new Date(),
         updatedAt: new Date(),
       } as User);

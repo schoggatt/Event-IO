@@ -68,26 +68,13 @@ export default class EventController {
     const eventKey: number = parseInt(req.params.eventKey);
     try {
       const deletedEvent = await eventRepository.delete(eventKey);
-      if (deletedEvent > 0) {
+      if (deletedEvent) {
         res
           .status(200)
           .json({ message: "Event deleted successfully", deletedEvent });
       } else {
         res.status(404).json({ message: "Event not found" });
       }
-    } catch (err: any) {
-      res
-        .status(500)
-        .json({ message: "Some error occurred while retrieving events." });
-    }
-  }
-
-  async deleteAll(req: Request, res: Response) {
-    try {
-      const deletedEvents = await eventRepository.deleteAll();
-      res
-        .status(200)
-        .json({ message: "Events deleted successfully", deletedEvents });
     } catch (err: any) {
       res
         .status(500)

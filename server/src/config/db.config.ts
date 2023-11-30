@@ -1,6 +1,6 @@
 export default {
   HOST: "localhost",
   USER: "root",
-  PASSWORD: "TSWCOT88!cool",
+  PASSWORD: "password",
   DB: "dev_event_io",
 };

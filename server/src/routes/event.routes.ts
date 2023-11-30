@@ -85,19 +85,6 @@ class EventRoutes {
      *       description: TODO
      */
     this.router.delete("/:eventKey", this.controller.delete);
-
-    /**
-     * @openapi
-     * /api/events/:
-     *  delete:
-     *     tags:
-     *     - Events
-     *     description: TODO
-     *     responses:
-     *       200:
-     *         description: TODO
-     */
-    this.router.delete("/", this.controller.deleteAll);
   }
 }
 

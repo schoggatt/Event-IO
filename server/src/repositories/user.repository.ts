@@ -5,6 +5,7 @@ import { User } from "../models/user";
 import connection from "../db";
 import { ResultSetHeader } from "mysql2";
 import bcrypt from "bcrypt";
+import { PrismaClient } from "@prisma/client";
 
 interface GoogleTokensResult {
   access_token: string;
@@ -25,74 +26,42 @@ interface GoogleUserResult {
   locale: string;
 }
 
-interface UserRepository {
-  create(user: User): Promise<User>;
-  retrieveByKey(userKey: number): Promise<User | undefined>;
-  update(user: User): Promise<number>;
-  getGoogleOAuthTokens({ code }: { code: string }): Promise<GoogleTokensResult>;
-  getGoogleUser(tokens: {
-    id_token: string;
-    access_token: string;
-  }): Promise<GoogleUserResult>;
-}
+class UserRepository {
+  public prisma = new PrismaClient();
 
-class UserRepository implements UserRepository {
-  async create(user: User) {
-    const salt = await bcrypt.genSalt(10);
-    const password =
-      user.password.length > 0 ? await bcrypt.hash(user.password, salt) : "";
-    return new Promise((resolve, reject) => {
-      connection.query<ResultSetHeader>(
-        "INSERT INTO users (email, providerId, password, firstName, lastName, pictureSource) VALUES (?, ?, ?, ?, ?, ?)",
-        [
-          user.email,
-          user.providerId,
-          password,
-          user.firstName,
-          user.lastName,
-          user.pictureSource,
-        ],
-        (err, res) => {
-          if (err) reject(err);
-          else resolve({ ...user });
-        }
-      );
-    });
+  create(user: User) {
+    const newUser = this.prisma.users.create({ data: user });
+    return newUser;
   }
 
-  async retrieveByKey(eventKey: number): Promise<User | undefined> {
-    return new Promise((resolve, reject) => {
-      connection.query<User[]>(
-        "SELECT * FROM users WHERE eventKey = ?",
-        [eventKey],
-        (err, res) => {
-          if (err) reject(err);
-          else resolve(res?.[0]);
-        }
-      );
-    });
+  retrieveAll() {
+    const users = this.prisma.users.findMany();
+    return users;
   }
 
-  async update(user: User): Promise<number> {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(user.password, salt);
-    return new Promise((resolve, reject) => {
-      connection.query<ResultSetHeader>(
-        "UPDATE users SET email = ?, id = ?, password = ?, firstName = ?, lastName = ?, pictureSource = ?, WHERE userKey = ?",
-        [
-          user.email,
-          user.id,
-          hashedPassword,
-          user.firstName,
-          user.lastName,
-          user.pictureSource,
-        ],
-        (err, res) => {
-          if (err) reject(err);
-          else resolve(res.affectedRows);
-        }
-      );
+  retrieveByKey(userKey: number) {
+    const user = this.prisma.users.findUnique({ where: { id: userKey } });
+    return user;
+  }
+
+  update(user: User) {
+    this.prisma.users.update({
+      where: { id: user.id },
+      data: {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
     });
+
+    return user;
+  }
+
+  delete(userKey: number) {
+    const user = this.prisma.users.delete({ where: { id: userKey } });
+    return user;
   }
 
   async getGoogleOAuthTokens({

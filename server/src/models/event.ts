@@ -1,17 +1,19 @@
-import { RowDataPacket } from "mysql2";
-import { BaseModel } from "./base";
+import { IBaseModel, IBaseEntity } from "./base";
 
-export interface Event extends RowDataPacket, BaseModel {
-  eventKey: number;
+export interface Event extends IBaseEntity {
+  id: number;
   name: string;
-  description: string;
+  description: string | null;
+  location: string | null;
   startDate: Date;
-  endDate: Date;
-  location: string;
-  imageSource: string;
-  externalSource: string;
-  // tags: string[];
-  // attendees: any[];
-  // createdAt: Date;
-  // updatedAt: Date;
+  endDate: Date | null;
+}
+
+export interface EventModel extends IBaseModel {
+  id: number;
+  name: string;
+  description: string | null;
+  location: string | null;
+  startDate: Date;
+  endDate: Date | null;
 }
