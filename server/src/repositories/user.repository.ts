@@ -2,9 +2,6 @@ import axios from "axios";
 import googleConfig from "../config/google.config";
 import qs from "qs";
 import { User } from "../models/user";
-import connection from "../db";
-import { ResultSetHeader } from "mysql2";
-import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 
 interface GoogleTokensResult {
