@@ -1,7 +1,9 @@
 import express from "express";
 import Server from "./src/index";
-import swaggerDocs from "./src/utils/swagger";
+import swaggerDocs from "./src/swagger";
+import { PrismaClient } from "@prisma/client";
 
+const prismadb = new PrismaClient(); // Not sure if this is needed...
 const app = express();
 const server: Server = new Server(app);
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;

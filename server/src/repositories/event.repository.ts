@@ -1,99 +1,44 @@
-import { ResultSetHeader } from "mysql2";
-import connection from "../db";
+import { PrismaClient } from "@prisma/client";
 import { Event } from "../models/event";
 
-interface EventRepository {
-  create(event: Event): Promise<Event>;
-  retrieveAll(): Promise<Event[]>;
-  retrieveByKey(eventKey: number): Promise<Event | undefined>;
-  update(event: Event): Promise<number>;
-  delete(eventKey: number): Promise<number>;
-  deleteAll(): Promise<number>;
-}
+class EventRepository {
+  public prisma = new PrismaClient();
 
-class EventRepository implements EventRepository {
-  create(event: Event): Promise<Event> {
-    return new Promise((resolve, reject) => {
-      connection.query<ResultSetHeader>(
-        "INSERT INTO events (name, description, location, imageSource, externalSource) VALUES (?, ?, ?, ?, ?)",
-        [
-          event.name,
-          event.description,
-          event.location,
-          event.imageSource,
-          event.externalSource,
-        ],
-        (err, res) => {
-          if (err) reject(err);
-          else resolve({ ...event });
-        }
-      );
-    });
+  create(event: Event) {
+    const newUser = this.prisma.events.create({ data: event });
+    return newUser;
   }
 
-  retrieveAll(): Promise<Event[]> {
-    let query: string = "SELECT * FROM events";
-
-    return new Promise((resolve, reject) => {
-      connection.query<Event[]>(query, (err, res) => {
-        if (err) reject(err);
-        else resolve(res);
-      });
-    });
+  retrieveAll() {
+    const events = this.prisma.events.findMany();
+    return events;
   }
 
-  retrieveByKey(eventKey: number): Promise<Event | undefined> {
-    return new Promise((resolve, reject) => {
-      connection.query<Event[]>(
-        "SELECT * FROM events WHERE eventKey = ?",
-        [eventKey],
-        (err, res) => {
-          if (err) reject(err);
-          else resolve(res?.[0]);
-        }
-      );
-    });
+  retrieveByKey(eventKey: number) {
+    const event = this.prisma.events.findUnique({ where: { id: eventKey } });
+    return event;
   }
 
-  update(event: Event): Promise<number> {
-    return new Promise((resolve, reject) => {
-      connection.query<ResultSetHeader>(
-        "UPDATE events SET name = ?, description = ?, location = ?, imageSource = ?, externalSource = ?, WHERE eventKey = ?",
-        [
-          event.name,
-          event.description,
-          event.location,
-          event.imageSource,
-          event.externalSource,
-        ],
-        (err, res) => {
-          if (err) reject(err);
-          else resolve(res.affectedRows);
-        }
-      );
+  update(event: Event) {
+    this.prisma.events.update({
+      where: { id: event.id },
+      data: {
+        name: event.name,
+        description: event.description,
+        location: event.location,
+        startDate: event.startDate,
+        endDate: event.endDate,
+        createdAt: event.createdAt,
+        updatedAt: event.updatedAt,
+      },
     });
+
+    return event;
   }
 
-  delete(eventKey: number): Promise<number> {
-    return new Promise((resolve, reject) => {
-      connection.query<ResultSetHeader>(
-        "DELETE FROM events WHERE eventKey = ?",
-        [eventKey],
-        (err, res) => {
-          if (err) reject(err);
-          else resolve(res.affectedRows);
-        }
-      );
-    });
-  }
-
-  deleteAll(): Promise<number> {
-    return new Promise((resolve, reject) => {
-      connection.query<ResultSetHeader>("DELETE FROM events", (err, res) => {
-        if (err) reject(err);
-        else resolve(res.affectedRows);
-      });
-    });
+  delete(eventKey: number) {
+    const event = this.prisma.events.delete({ where: { id: eventKey } });
+    return event;
   }
 }
 
