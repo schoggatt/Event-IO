@@ -21,7 +21,7 @@ class UserRoutes {
      *       200:
      *         description: TODO
      */
-    this.router.post("/create", this.controller.create);
+    this.router.post("/register", this.controller.create);
 
     /**
      * @openapi
@@ -48,6 +48,19 @@ class UserRoutes {
      *         description: TODO
      */
     this.router.get("/:userKey", this.controller.retrieveById);
+
+    /**
+     * @openapi
+     * /api/users/login/{email}:
+     *  get:
+     *     tags:
+     *     - Users
+     *     description: TODO
+     *     responses:
+     *       200:
+     *         description: TODO
+     */
+    this.router.get("/login/:email", this.controller.retrieveByEmail);
 
     /**
      * @openapi

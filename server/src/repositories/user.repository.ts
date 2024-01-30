@@ -27,7 +27,13 @@ class UserRepository {
   public prisma = new PrismaClient();
 
   create(user: User) {
-    const newUser = this.prisma.users.create({ data: user });
+    const newUser = this.prisma.users.create({
+      data: {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+    });
     return newUser;
   }
 
@@ -38,6 +44,11 @@ class UserRepository {
 
   retrieveByKey(userKey: number) {
     const user = this.prisma.users.findUnique({ where: { id: userKey } });
+    return user;
+  }
+
+  retrieveByEmail(email: string) {
+    const user = this.prisma.users.findUnique({ where: { email: email } });
     return user;
   }
 

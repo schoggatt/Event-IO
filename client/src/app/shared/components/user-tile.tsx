@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { IUser } from "../models/user";
 import Image from "next/image";
-
+import { User } from "../models/user";
 import React from "react";
 
-function UserTile(props: { user: IUser }) {
+function UserTile(props: { user: User }) {
   const [isHovering, setIsHovering] = useState(false);
 
   return (
@@ -14,18 +13,18 @@ function UserTile(props: { user: IUser }) {
       onMouseLeave={() => setIsHovering(false)}
     >
       <div className="rounded-full w-30 h-30">
-        <Image
-          key={props.user.key}
+        {/* <Image
+          key={props.user.id}
           width={40}
           height={40}
           src={props.user.image}
           alt={props.user.name}
           className="rounded-full"
-        />
+        /> */}
       </div>
       {isHovering ? (
         <div className="relative">
-          <p>{props.user.name}</p>
+          {/* <p>{props.user.name}</p> */}
           <p>{props.user.email}</p>
         </div>
       ) : null}
