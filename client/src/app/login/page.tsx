@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { AppDispatch, useAppSelector } from "@/redux/store";
+import { AppDispatch } from "@/redux/store";
 import { login } from "@/redux/features/auth.slice";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface ILoginInput {
   email: string;
@@ -19,6 +19,7 @@ export default function Login() {
     isAuthenticated: false,
   });
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setLoginInput({
@@ -31,6 +32,8 @@ export default function Login() {
     const user = loginInput;
     user.isAuthenticated = true;
     dispatch(login(user));
+
+    router.push("/");
   }
 
   return (

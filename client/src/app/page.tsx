@@ -36,7 +36,7 @@ export default function Home() {
 
   return (
     <main>
-      <div className="text-center">Yee-Haw!</div>
+      <div className="text-center">Home</div>
     </main>
   );
 }
