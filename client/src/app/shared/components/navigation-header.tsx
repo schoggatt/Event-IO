@@ -74,7 +74,7 @@ export default function NavigationHeader() {
           <Link className="mr-5 hover:text-gray-600" href="/myevents">
             My Events
           </Link>
-          <Link className="hover:text-gray-600" href="/donate">
+          <Link className="hover:text-gray-600" href="/contactme">
             Contact
           </Link>
         </nav>
