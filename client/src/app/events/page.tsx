@@ -19,10 +19,9 @@ export default function Events() {
   }
 
   function generateEventTiles() {
-    const test = events.map((event, idx) => {
+    return events.map((event, idx) => {
       return <Card key={idx} event={event} descriptionMaxLength={200} />;
     });
-    return test;
   }
 
   // TODO: Will automatically tile by 5 rows and then us pagination.
