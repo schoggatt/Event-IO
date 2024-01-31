@@ -11,7 +11,7 @@ import { ResponseStatus } from "@/redux/models/response-status";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 
 export default function Events() {
-  const [allEvents, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const eventState = useAppSelector((state) => state.eventReducer.value);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -28,7 +28,7 @@ export default function Events() {
   }
 
   function generateEventTiles() {
-    return allEvents.map((event, idx) => {
+    return events.map((event, idx) => {
       return <Card key={idx} event={event} descriptionMaxLength={200} />;
     });
   }
@@ -38,10 +38,16 @@ export default function Events() {
       return <div>Loading...</div>;
     } else if (eventState.status === ResponseStatus.FAILED) {
       return <div>Failed to load events</div>;
-    } else {
+    } else if (events.length > 0) {
       return (
         <div className={`grid grid-cols-4 grid-rows-${calculateRows()} gap-4`}>
           {generateEventTiles()}
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <h5 className="text-xl">No events found.</h5>
         </div>
       );
     }
@@ -51,7 +57,10 @@ export default function Events() {
   return (
     <div className="w-full">
       <div className="pb-4">
-        <SearchBar<Event> setElements={setEvents} elements={allEvents} />
+        <SearchBar<Event>
+          allElements={eventState.events}
+          setElements={setEvents}
+        />
       </div>
       {getContent()}
     </div>

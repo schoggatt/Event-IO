@@ -1,12 +1,12 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface ISearchable {
   name: string;
 }
 
 export interface ISearchBarProps<T> {
-  elements: T[];
+  allElements: T[];
   setElements: React.Dispatch<React.SetStateAction<T[]>>;
 }
 
@@ -17,9 +17,15 @@ export default function SearchBar<T>(props: ISearchBarProps<T>) {
     setSearch(event.target.value);
   }
 
+  useEffect(() => {
+    if (search === "") {
+      props.setElements(props.allElements);
+    }
+  }, [search, props]);
+
   // TODO: probably dont want to get all the cards before this so we can search
   function onSubmit() {
-    const elements = (props.elements as ISearchable[]).filter((element) => {
+    const elements = (props.allElements as ISearchable[]).filter((element) => {
       return element.name
         .toString()
         .toLowerCase()
