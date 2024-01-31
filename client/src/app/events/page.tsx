@@ -1,17 +1,24 @@
 "use client";
 
-import { IEvent } from "../shared/models/event";
 import SearchBar from "../shared/components/search-bar";
 import { useEffect, useState } from "react";
 import Card from "../shared/components/event-card";
 import { mockEvents } from "../tests/mocks/events.mocks";
+import EventService from "../shared/services/events/event.service";
+import { Event } from "../shared/models/event";
 
 export default function Events() {
-  const [events, setEvents] = useState<IEvent[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const eventService = new EventService();
 
   useEffect(() => {
-    setEvents(mockEvents);
-  }, []);
+    async function fetchEvents() {
+      const events = await eventService.getEvents();
+      setEvents(events);
+    }
+
+    fetchEvents();
+  });
 
   function calculateRows() {
     const rows = Math.ceil(mockEvents.length / 4);
@@ -28,7 +35,7 @@ export default function Events() {
   return (
     <div className="w-full">
       <div className="pb-4">
-        <SearchBar<IEvent> setElements={setEvents} elements={events} />
+        <SearchBar<Event> setElements={setEvents} elements={events} />
       </div>
       <div className={`grid grid-cols-4 grid-rows-${calculateRows()} gap-4`}>
         {generateEventTiles()}
