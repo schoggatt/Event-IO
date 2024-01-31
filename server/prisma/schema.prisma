@@ -23,7 +23,7 @@ model Users {
 model Events {
     id          Int       @id @default(autoincrement())
     name        String
-    description String?
+    description String?   @db.VarChar(500)
     location    String?
     startDate   DateTime
     endDate     DateTime?

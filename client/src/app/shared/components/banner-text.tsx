@@ -30,7 +30,7 @@ export default function BannerText(props: IBannerTextProps) {
           "text-green-300": colorIndex === 5,
           "text-orange-400": colorIndex === 6,
           "text-red-300": colorIndex === 7,
-          "text-neutral-300": colorIndex === 8,
+          "text-pink-300": colorIndex === 8,
         })}
       >
         Event

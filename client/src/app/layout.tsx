@@ -24,7 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ReduxProvider>
           <NavigationHeader />
-          <main className="flex min-h-screen flex-col items-center pr-40 pl-40 pt-4 pb-4 text-center">
+          <main className="flex flex-col items-center pr-40 pl-40 pt-4 text-center">
             {children}
           </main>
         </ReduxProvider>
