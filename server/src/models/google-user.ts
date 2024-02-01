@@ -1,22 +1,19 @@
-import { IBaseEntity, IBaseModel } from "./base";
+import { IBaseModel } from "./base";
 
-export interface IUser extends IBaseEntity {
-  id: number;
+export interface IGoogleUser {
   email: string;
   image?: string;
   firstName: string;
   lastName: string;
 }
 
-export class UserModel implements IBaseModel {
-  id: number;
+export class GoogleUserModel implements IBaseModel, IGoogleUser {
   email: string;
   image?: string;
   firstName: string;
   lastName: string;
 
-  constructor(user: IUser) {
-    this.id = user.id;
+  constructor(user: IGoogleUser) {
     this.email = user.email;
     this.image = user.image;
     this.firstName = user.firstName;

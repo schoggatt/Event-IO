@@ -6,20 +6,36 @@ import BannerText from "./banner-text";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/features/auth.slice";
+import { signIn, useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function NavigationHeader() {
-  const email = useAppSelector((state) => state.authReducer.value.email);
+  const authState = useAppSelector((state) => state.authReducer.value);
   const dispatch = useDispatch<AppDispatch>();
 
   function handleLogout() {
     dispatch(logout());
   }
 
+  function handleLogin() {
+    signIn();
+  }
+
   function handleUserStatus() {
-    if (email.length > 0) {
+    if (authState.isAuthenticated && authState.user) {
       return (
         <>
-          <h1 className="text-white mr-5">{email}</h1>
+          {authState.user.image ? (
+            <Image
+              className="rounded-full mr-3"
+              alt="profile-picture"
+              src={authState.user.image ?? ""}
+              width={40}
+              height={40}
+            />
+          ) : (
+            <p className="text-white mr-5">{authState.user.email}</p>
+          )}
           <button
             onClick={handleLogout}
             className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 text-black"
@@ -41,22 +57,23 @@ export default function NavigationHeader() {
       );
     } else {
       return (
-        <Link href="/login">
-          <button className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 text-black">
-            Login
-            <svg
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              className="w-4 h-4 ml-1"
-              viewBox="0 0 24 24"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-          </button>
-        </Link>
+        <button
+          className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 text-black"
+          onClick={handleLogin}
+        >
+          Login
+          <svg
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            className="w-4 h-4 ml-1"
+            viewBox="0 0 24 24"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7"></path>
+          </svg>
+        </button>
       );
     }
   }

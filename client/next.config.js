@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images: {domains: ['images.unsplash.com', 'th.bing.com', 'deep-image.ai']}
+    images: {domains: ['lh3.googleusercontent.com']},
 }
 
 module.exports = nextConfig
