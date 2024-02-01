@@ -3,7 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import NavigationHeader from "./shared/components/navigation-header";
 import { ReduxProvider } from "@/redux/provider";
-import AuthProviders from "./auth/auth-provider";
+import AuthProviders from "./api/auth/auth-provider";
 import App from "./app";
 
 const inter = Poppins({

@@ -1,11 +1,12 @@
 import axios from "axios";
 import { IUser } from "../models/user";
 import { PrismaClient } from "@prisma/client";
+import { IGoogleUser } from "../models/google-user";
 
 class UserRepository {
   public prisma = new PrismaClient();
 
-  create(user: IUser) {
+  create(user: IGoogleUser | IUser) {
     const newUser = this.prisma.users.create({
       data: {
         email: user.email,

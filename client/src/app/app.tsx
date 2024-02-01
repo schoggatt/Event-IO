@@ -1,11 +1,11 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import React, { use, useEffect } from "react";
-import { User } from "./shared/models/user";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { authenticate } from "@/redux/features/auth.slice";
+import { GoogleUser } from "./api/auth/models/google-user";
 
 export default function App({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
@@ -14,8 +14,7 @@ export default function App({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (session?.user) {
       const name = session.user.name!.split(" ");
-      const user: User = {
-        id: 0,
+      const user: GoogleUser = {
         email: session.user.email!,
         firstName: name[0],
         lastName: name[1],

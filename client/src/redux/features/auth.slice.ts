@@ -3,6 +3,7 @@ import UserService from "@/app/shared/services/auth/user.service";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ResponseStatus } from "../models/response-status";
 import { signOut } from "next-auth/react";
+import { GoogleUser } from "@/app/api/auth/models/google-user";
 
 type InitialState = {
   value: AuthState;
@@ -26,7 +27,7 @@ const userService = new UserService();
 
 export const authenticate = createAsyncThunk(
   "authenticate",
-  async (user: User) => {
+  async (user: GoogleUser) => {
     return await userService.authenticateUser(user);
   }
 );

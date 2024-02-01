@@ -5,15 +5,13 @@ import React from "react";
 import BannerText from "./banner-text";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
-import { authenticate, logout } from "@/redux/features/auth.slice";
+import { logout } from "@/redux/features/auth.slice";
 import { signIn, useSession } from "next-auth/react";
-import { User } from "../models/user";
 import Image from "next/image";
 
 export default function NavigationHeader() {
   const authState = useAppSelector((state) => state.authReducer.value);
   const dispatch = useDispatch<AppDispatch>();
-  const { data: session } = useSession();
 
   function handleLogout() {
     dispatch(logout());
@@ -21,17 +19,6 @@ export default function NavigationHeader() {
 
   function handleLogin() {
     signIn();
-    if (session?.user) {
-      const name = session.user.name!.split(" ");
-      const user: User = {
-        id: 0,
-        email: session.user.email!,
-        firstName: name[0],
-        lastName: name[1],
-        image: session.user.image,
-      };
-      dispatch(authenticate(user));
-    }
   }
 
   function handleUserStatus() {

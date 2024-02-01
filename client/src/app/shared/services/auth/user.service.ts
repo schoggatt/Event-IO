@@ -1,6 +1,7 @@
 import { User } from "@/app/shared/models/user";
 import axios from "axios";
 import BaseService from "../base.service";
+import { GoogleUser } from "@/app/api/auth/models/google-user";
 
 interface IUserService {
   getUserById(id: number): Promise<User>;
@@ -15,7 +16,7 @@ export default class UserService extends BaseService implements IUserService {
     super("users");
   }
 
-  authenticateUser(user: User): Promise<User> {
+  authenticateUser(user: GoogleUser): Promise<User> {
     return axios
       .post(`${this.apiEndpoint}/authenticate`, user)
       .then((res) => {

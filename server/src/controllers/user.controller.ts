@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import userRepository from "../repositories/user.repository";
 import { IUser, UserModel } from "../models/user";
+import { IGoogleUser } from "../models/google-user";
 
 // Need to figure out how to get a return type of User for Prisma client calls
 export default class UserController {
@@ -71,7 +72,7 @@ export default class UserController {
   }
 
   async authenticateUser(req: Request, res: Response) {
-    const user: IUser = req.body;
+    const user: IGoogleUser = req.body;
     try {
       const existingUser = await userRepository.retrieveByEmail(user.email);
       if (existingUser) {
