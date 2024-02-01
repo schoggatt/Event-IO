@@ -21,7 +21,7 @@ class UserRoutes {
      *       200:
      *         description: TODO
      */
-    this.router.post("/register", this.controller.create);
+    this.router.post("/create", this.controller.create);
 
     /**
      * @openapi
@@ -64,16 +64,16 @@ class UserRoutes {
 
     /**
      * @openapi
-     * /api/users/oauth/google:
+     * /api/users/authenticate:
      *  get:
      *     tags:
      *     - Users
-     *     description: Acquires token for OAuth with Google
+     *     description: Authenticates user to either login or create a new account.
      *     responses:
      *       200:
-     *         description: Acquires token for OAuth on the given Google account
+     *         description: Authenticates user to either login or create a new account.
      */
-    this.router.get("/oauth/google", this.controller.googleOAuthHandler);
+    this.router.post("/authenticate", this.controller.authenticateUser);
   }
 }
 

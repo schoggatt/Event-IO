@@ -3,6 +3,8 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import NavigationHeader from "./shared/components/navigation-header";
 import { ReduxProvider } from "@/redux/provider";
+import AuthProviders from "./auth/auth-provider";
+import App from "./app";
 
 const inter = Poppins({
   subsets: ["latin"],
@@ -22,12 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ReduxProvider>
-          <NavigationHeader />
-          <main className="flex flex-col items-center pr-40 pl-40 pt-4 text-center">
-            {children}
-          </main>
-        </ReduxProvider>
+        <AuthProviders>
+          <ReduxProvider>
+            <NavigationHeader />
+            <App>{children}</App>
+          </ReduxProvider>
+        </AuthProviders>
       </body>
     </html>
   );

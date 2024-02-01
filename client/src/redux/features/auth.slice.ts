@@ -1,4 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { User } from "@/app/shared/models/user";
+import UserService from "@/app/shared/services/auth/user.service";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ResponseStatus } from "../models/response-status";
+import { signOut } from "next-auth/react";
 
 type InitialState = {
   value: AuthState;
@@ -6,36 +10,54 @@ type InitialState = {
 
 type AuthState = {
   isAuthenticated: boolean;
-  email: string;
-  password: string;
+  status: ResponseStatus;
+  user: User | null;
 };
 
 const initialState: InitialState = {
   value: {
     isAuthenticated: false,
-    email: "",
-    password: "",
+    user: null,
+    status: ResponseStatus.IDLE,
   },
 };
+
+const userService = new UserService();
+
+export const authenticate = createAsyncThunk(
+  "authenticate",
+  async (user: User) => {
+    return await userService.authenticateUser(user);
+  }
+);
 
 export const auth = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<AuthState>) => {
-      return {
-        value: {
-          isAuthenticated: action.payload.isAuthenticated,
-          email: action.payload.email,
-          password: action.payload.password,
-        },
-      };
-    },
     logout: (state) => {
+      signOut();
       return initialState;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(authenticate.pending, (state, action) => {
+        state.value.status = ResponseStatus.LOADING;
+        state.value.isAuthenticated = false;
+      })
+      .addCase(authenticate.fulfilled, (state, action) => {
+        state.value.status = ResponseStatus.SUCCEEDED;
+        state.value.isAuthenticated = true;
+        state.value.user = action.payload;
+      })
+      .addCase(authenticate.rejected, (state, action) => {
+        state.value.status = ResponseStatus.FAILED;
+        state.value.isAuthenticated = false;
+        state.value.user = null;
+      });
+  },
 });
 
-export const { login, logout } = auth.actions;
+export const { logout } = auth.actions;
 export default auth.reducer;

@@ -1,8 +1,9 @@
 import { IBaseEntity, IBaseModel } from "./base";
 
-export interface User extends IBaseEntity {
+export interface IUser extends IBaseEntity {
   id: number;
   email: string;
+  image?: string;
   firstName: string;
   lastName: string;
 }
@@ -10,12 +11,14 @@ export interface User extends IBaseEntity {
 export class UserModel implements IBaseModel {
   id: number;
   email: string;
+  image?: string;
   firstName: string;
   lastName: string;
 
-  constructor(user: User) {
+  constructor(user: IUser) {
     this.id = user.id;
     this.email = user.email;
+    this.image = user.image;
     this.firstName = user.firstName;
     this.lastName = user.lastName;
   }

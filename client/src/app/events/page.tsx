@@ -38,7 +38,10 @@ export default function Events() {
       return <div>Loading...</div>;
     } else if (eventState.status === ResponseStatus.FAILED) {
       return <div>Failed to load events</div>;
-    } else if (events.length > 0) {
+    } else if (
+      eventState.status === ResponseStatus.SUCCEEDED &&
+      eventState.events.length > 0
+    ) {
       return (
         <div className={`grid grid-cols-4 grid-rows-${calculateRows()} gap-4`}>
           {generateEventTiles()}
