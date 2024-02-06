@@ -6,7 +6,7 @@ import BannerText from "./banner-text";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import { useDispatch } from "react-redux";
 import { logout } from "@/redux/features/auth.slice";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 
 export default function NavigationHeader() {
@@ -88,9 +88,11 @@ export default function NavigationHeader() {
           <Link className="mr-5 hover:text-gray-600" href="/events">
             Events
           </Link>
-          <Link className="mr-5 hover:text-gray-600" href="/myevents">
-            My Events
-          </Link>
+          {authState.user && (
+            <Link className="mr-5 hover:text-gray-600" href="/myevents">
+              My Events
+            </Link>
+          )}
           <Link className="hover:text-gray-600" href="/contactme">
             Contact
           </Link>

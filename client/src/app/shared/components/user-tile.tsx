@@ -13,18 +13,20 @@ function UserTile(props: { user: User }) {
       onMouseLeave={() => setIsHovering(false)}
     >
       <div className="rounded-full w-30 h-30">
-        {/* <Image
-          key={props.user.id}
-          width={40}
-          height={40}
-          src={props.user.image}
-          alt={props.user.name}
-          className="rounded-full"
-        /> */}
+        {props.user.image && (
+          <Image
+            key={props.user.id}
+            width={40}
+            height={40}
+            src={props.user.image}
+            alt="user-profile-image"
+            className="rounded-full"
+          />
+        )}
       </div>
       {isHovering ? (
         <div className="relative">
-          {/* <p>{props.user.name}</p> */}
+          <p>{props.user.firstName + props.user.lastName}</p>
           <p>{props.user.email}</p>
         </div>
       ) : null}

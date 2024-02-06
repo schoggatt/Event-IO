@@ -4,6 +4,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ResponseStatus } from "../models/response-status";
 import { signOut } from "next-auth/react";
 import { GoogleUser } from "@/app/api/auth/models/google-user";
+import { RootState } from "../store";
 
 type InitialState = {
   value: AuthState;
@@ -60,5 +61,6 @@ export const auth = createSlice({
   },
 });
 
+export const userState = (state: RootState) => state.authReducer.value.user;
 export const { logout } = auth.actions;
 export default auth.reducer;
