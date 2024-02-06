@@ -73,7 +73,7 @@ export const event = createSlice({
         const oldEvent = state.value.events.find(
           (event) => event.id === action.payload.id
         )!;
-        oldEvent.users = action.payload.users;
+        oldEvent.userEvents = action.payload.userEvents;
       })
       .addCase(addAttendee.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;
@@ -89,7 +89,7 @@ export const event = createSlice({
         const oldEvent = state.value.events.find(
           (event) => event.id === action.payload.id
         )!;
-        oldEvent.users = action.payload.users;
+        oldEvent.userEvents = action.payload.userEvents;
       })
       .addCase(removeAttendee.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;
@@ -98,9 +98,10 @@ export const event = createSlice({
   },
 });
 
+// TODO: This is probably incorrect?
 export const selectEventsByUserId = (state: EventState, userId: number) =>
   state.events.filter((event) =>
-    event.users.some((user) => user.id === userId)
+    event.userEvents.some((userEvent) => userEvent.userId === userId)
   );
 
 export const selectEventById = (state: EventState, eventId: number) =>

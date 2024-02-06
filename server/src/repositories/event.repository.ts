@@ -8,13 +8,12 @@ class EventRepository {
 
   async create(event: IEvent) {
     const newEvent = await this.prisma.events.create({
-      data: event,
-      include: {
-        userEvents: {
-          select: {
-            user: true,
-          },
-        },
+      data: {
+        name: event.name,
+        description: event.description,
+        location: event.location,
+        startDate: event.startDate,
+        endDate: event.endDate,
       },
     });
     return convertToEventModel(newEvent);
@@ -24,7 +23,7 @@ class EventRepository {
     const events = await this.prisma.events.findMany({
       include: {
         userEvents: {
-          select: {
+          include: {
             user: true,
           },
         },
@@ -38,7 +37,7 @@ class EventRepository {
       where: { id: eventId },
       include: {
         userEvents: {
-          select: {
+          include: {
             user: true,
           },
         },

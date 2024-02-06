@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { UserEvent } from "./user-event";
 
 export interface Event {
   id: number;
@@ -7,7 +7,8 @@ export interface Event {
   startDate: Date;
   endDate: Date;
   location: string;
-  users: User[];
   createdAt: Date;
   updatedAt: Date;
+
+  userEvents: UserEvent[];
 }

@@ -37,7 +37,7 @@ export default class EventService extends BaseService implements IEventService {
 
   removeAttendee(userEventId: number): Promise<Event> {
     return axios
-      .delete(`${this.apiEndpoint}/add/attendee/${userEventId}`)
+      .delete(`${this.apiEndpoint}/remove/attendee/${userEventId}`)
       .then((res) => {
         return res.data;
       })
