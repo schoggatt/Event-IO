@@ -1,5 +1,3 @@
-import { IBaseModel } from "./base";
-
 export interface IGoogleUser {
   email: string;
   image?: string;
@@ -7,7 +5,7 @@ export interface IGoogleUser {
   lastName: string;
 }
 
-export class GoogleUserModel implements IBaseModel, IGoogleUser {
+export class GoogleUserModel implements IGoogleUser {
   email: string;
   image?: string;
   firstName: string;

@@ -19,6 +19,8 @@ model Users {
     lastName  String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    userEvents UserEvents[]
 }
 
 model Events {
@@ -30,4 +32,23 @@ model Events {
     endDate     DateTime?
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
+
+    userEvents UserEvents[]
+}
+
+model UserEvents {
+    id        Int      @id @default(autoincrement())
+    userId    Int
+    eventId   Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user  Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+    event Events @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, eventId])
+    @@index([userId])
+    @@index([eventId])
+    @@index([userId, eventId])
+    @@index([eventId, userId])
 }

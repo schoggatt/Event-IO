@@ -38,14 +38,14 @@ class EventRoutes {
 
     /**
      * @openapi
-     * /api/events/{eventKey}:
+     * /api/events/{eventId}:
      *  get:
      *     tags:
      *     - Events
      *     description: Get an event by key
      *  summary: Get an event by key
      *  parameters:
-     *      - name: eventKey
+     *      - name: eventId
      *        in: path
      *        description: The key of the event
      *        required: true
@@ -53,7 +53,7 @@ class EventRoutes {
      *     200:
      *       description: TODO
      */
-    this.router.get("/:eventKey", this.controller.retrieveById);
+    this.router.get("/:eventId", this.controller.retrieveById);
 
     /**
      * @openapi
@@ -70,13 +70,13 @@ class EventRoutes {
 
     /**
      * @openapi
-     * /api/events/{eventKey}:
+     * /api/events/{eventId}:
      *  delete:
      *     tags:
      *     - Events
      *  summary: Delete an event by key
      *  parameters:
-     *      - name: eventKey
+     *      - name: eventId
      *        in: path
      *        description: The key of the event
      *        required: true
@@ -84,7 +84,46 @@ class EventRoutes {
      *     200:
      *       description: TODO
      */
-    this.router.delete("/:eventKey", this.controller.delete);
+    this.router.delete("/:eventId", this.controller.delete);
+
+    /**
+     * @openapi
+     * /api/events/add/attendee:
+     *  post:
+     *     tags:
+     *     - Events
+     *  summary: Delete an event by key
+     *  parameters:
+     *      - name: eventId
+     *        in: path
+     *        description: The key of the event
+     *        required: true
+     *  responses:
+     *     200:
+     *       description: TODO
+     */
+    this.router.post("/add/attendee", this.controller.addAttendee);
+
+    /**
+     * @openapi
+     * /api/events/add/attendee:
+     *  post:
+     *     tags:
+     *     - Events
+     *  summary: Delete an event by key
+     *  parameters:
+     *      - name: eventId
+     *        in: path
+     *        description: The key of the event
+     *        required: true
+     *  responses:
+     *     200:
+     *       description: TODO
+     */
+    this.router.delete(
+      "/remove/attendee/:userEventId",
+      this.controller.removeAttendee
+    );
   }
 }
 
