@@ -4,6 +4,7 @@ import BaseService from "../base.service";
 import { UserEvent } from "../../models/user-event";
 
 interface IEventService {
+  createEvent(event: Event): Promise<Event>;
   getEvents(): Promise<Event[]>;
   addAttendee(userEvent: UserEvent): Promise<Event>;
 }
@@ -11,6 +12,17 @@ interface IEventService {
 export default class EventService extends BaseService implements IEventService {
   constructor() {
     super("events");
+  }
+
+  createEvent(event: Event): Promise<Event> {
+    return axios
+      .post(`${this.apiEndpoint}/`, event)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   getEvents(): Promise<Event[]> {
@@ -37,7 +49,7 @@ export default class EventService extends BaseService implements IEventService {
 
   removeAttendee(userEventId: number): Promise<Event> {
     return axios
-      .delete(`${this.apiEndpoint}/add/attendee/${userEventId}`)
+      .delete(`${this.apiEndpoint}/remove/attendee/${userEventId}`)
       .then((res) => {
         return res.data;
       })

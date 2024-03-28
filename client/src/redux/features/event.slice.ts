@@ -1,8 +1,13 @@
 import { Event } from "@/app/shared/models/event";
 import EventService from "@/app/shared/services/events/event.service";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createSelector,
+} from "@reduxjs/toolkit";
 import { ResponseStatus } from "../models/response-status";
 import { UserEvent } from "@/app/shared/models/user-event";
+import { RootState } from "../store";
 
 type EventState = {
   events: Event[];
@@ -24,7 +29,14 @@ const initialState: InitialState = {
 
 const eventService = new EventService();
 
-export const getEvents = createAsyncThunk("events/", async () => {
+export const createEvent = createAsyncThunk(
+  "events/create",
+  async (event: Event) => {
+    return await eventService.createEvent(event);
+  }
+);
+
+export const getEvents = createAsyncThunk("events/get", async () => {
   return await eventService.getEvents();
 });
 
@@ -52,6 +64,19 @@ export const event = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(createEvent.pending, (state, action) => {
+        state.value.status = ResponseStatus.LOADING;
+      })
+      .addCase(createEvent.fulfilled, (state, action) => {
+        state.value.status = ResponseStatus.SUCCEEDED;
+        state.value.events.push(action.payload);
+      })
+      .addCase(createEvent.rejected, (state, action) => {
+        state.value.status = ResponseStatus.FAILED;
+        state.value.error = action.error.message;
+      });
+
+    builder
       .addCase(getEvents.pending, (state, action) => {
         state.value.status = ResponseStatus.LOADING;
       })
@@ -73,7 +98,7 @@ export const event = createSlice({
         const oldEvent = state.value.events.find(
           (event) => event.id === action.payload.id
         )!;
-        oldEvent.users = action.payload.users;
+        oldEvent.userEvents = action.payload.userEvents;
       })
       .addCase(addAttendee.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;
@@ -89,7 +114,7 @@ export const event = createSlice({
         const oldEvent = state.value.events.find(
           (event) => event.id === action.payload.id
         )!;
-        oldEvent.users = action.payload.users;
+        oldEvent.userEvents = action.payload.userEvents;
       })
       .addCase(removeAttendee.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;
@@ -98,10 +123,17 @@ export const event = createSlice({
   },
 });
 
-export const selectEventsByUserId = (state: EventState, userId: number) =>
-  state.events.filter((event) =>
-    event.users.some((user) => user.id === userId)
-  );
+export const eventsState = (state: RootState) =>
+  state.eventReducer.value.events;
+
+export const selectEventsByUserId = createSelector(
+  [eventsState, (state: RootState, userId: number) => userId],
+  (events, userId) => {
+    return events.filter((event) =>
+      event.userEvents.some((userEvent) => userEvent.userId === userId)
+    );
+  }
+);
 
 export const selectEventById = (state: EventState, eventId: number) =>
   state.events.find((event) => event.id === eventId);

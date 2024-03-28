@@ -8,7 +8,7 @@ export default class EventController {
     try {
       const newEvent = await eventRepository.create(event);
       if (newEvent) {
-        res.status(200).json(event);
+        res.status(200).json(newEvent);
       } else {
         res
           .status(500)
