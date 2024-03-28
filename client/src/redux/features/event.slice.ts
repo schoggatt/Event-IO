@@ -36,6 +36,13 @@ export const createEvent = createAsyncThunk(
   }
 );
 
+export const updateEvent = createAsyncThunk(
+  "events/update",
+  async (event: Event) => {
+    return await eventService.updateEvent(event);
+  }
+);
+
 export const getEvents = createAsyncThunk("events/get", async () => {
   return await eventService.getEvents();
 });
@@ -72,6 +79,27 @@ export const event = createSlice({
         state.value.events.push(action.payload);
       })
       .addCase(createEvent.rejected, (state, action) => {
+        state.value.status = ResponseStatus.FAILED;
+        state.value.error = action.error.message;
+      });
+
+    builder
+      .addCase(updateEvent.pending, (state, action) => {
+        state.value.status = ResponseStatus.LOADING;
+      })
+      .addCase(updateEvent.fulfilled, (state, action) => {
+        const oldEvent = state.value.events.find(
+          (event) => event.id === action.payload.id
+        )!;
+        oldEvent.name = action.payload.name;
+        oldEvent.description = action.payload.description;
+        oldEvent.location = action.payload.location;
+        oldEvent.startDate = action.payload.startDate;
+        oldEvent.endDate = action.payload.endDate;
+
+        state.value.status = ResponseStatus.SUCCEEDED;
+      })
+      .addCase(updateEvent.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;
         state.value.error = action.error.message;
       });
@@ -123,14 +151,19 @@ export const event = createSlice({
   },
 });
 
+export const eventSliceState = (state: RootState) => state.eventReducer.value;
+
 export const eventsState = (state: RootState) =>
   state.eventReducer.value.events;
 
 export const selectEventsByUserId = createSelector(
-  [eventsState, (state: RootState, userId: number) => userId],
-  (events, userId) => {
-    return events.filter((event) =>
-      event.userEvents.some((userEvent) => userEvent.userId === userId)
+  [eventsState, (state: RootState) => state.authReducer.value.user],
+  (events, user) => {
+    if (!user) return [];
+    return events.filter(
+      (event) =>
+        event.userEvents.some((userEvent) => userEvent.userId === user.id) ||
+        event.owner.id === user.id
     );
   }
 );

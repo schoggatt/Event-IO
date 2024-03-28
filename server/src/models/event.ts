@@ -1,4 +1,5 @@
 import { IBaseEntity, IBaseModel } from "./base";
+import { IUser, UserModel } from "./user";
 import { IUserEvent, UserEventModel } from "./user-event";
 
 export interface IEvent extends IBaseEntity {
@@ -9,6 +10,7 @@ export interface IEvent extends IBaseEntity {
   startDate: Date;
   endDate: Date | null;
   userEvents: IUserEvent[];
+  owner: IUser;
 }
 
 export class EventModel implements IEvent {
@@ -22,6 +24,7 @@ export class EventModel implements IEvent {
   updatedAt: Date;
 
   userEvents: UserEventModel[];
+  owner: UserModel;
 
   constructor(event: IEvent) {
     this.id = event.id;
@@ -35,5 +38,6 @@ export class EventModel implements IEvent {
     this.userEvents = event.userEvents.map(
       (userEvent) => new UserEventModel(userEvent)
     );
+    this.owner = new UserModel(event.owner);
   }
 }

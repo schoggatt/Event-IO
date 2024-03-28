@@ -20,6 +20,7 @@ model Users {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    events     Events[]
     userEvents UserEvents[]
 }
 
@@ -32,8 +33,11 @@ model Events {
     endDate     DateTime?
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
+    ownerId     Int       @default(23) // This is temporary in a PROD environment this would always be populated
 
-    userEvents UserEvents[]
+    owner Users @relation(fields: [ownerId], references: [id]) // Creator of the event
+
+    userEvents UserEvents[] // Attendees
 }
 
 model UserEvents {
