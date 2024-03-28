@@ -22,20 +22,19 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [description, setDescription] = useState("");
 
   const user = useAppSelector(userState);
   const dispatch = useDispatch<AppDispatch>();
 
-  // TODO: Need to add form validation.
   function createNewEvent() {
     const event: Event = {
       id: 0,
       name: name,
       description: description,
-      startDate: startDate ?? new Date(),
-      endDate: endDate,
+      startDate: startDate,
+      endDate: endDate ?? startDate,
       location: location,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -45,10 +44,14 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
   }
 
   function handleChange<T>(
-    value: T,
-    setter: React.Dispatch<React.SetStateAction<T>>
+    value: T | undefined,
+    setter:
+      | React.Dispatch<React.SetStateAction<T>>
+      | React.Dispatch<React.SetStateAction<T | undefined>>
   ) {
-    setter(value);
+    if (value) {
+      setter(value);
+    }
   }
 
   function handleSubmit() {
@@ -61,10 +64,14 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
   }
 
   return (
-    <Modal show={props.isVisible} size="md" popup>
+    <Modal show={props.isVisible} size="md" popup onClose={handleClose}>
       <Modal.Header>Create Event</Modal.Header>
       <Modal.Body>
-        <form className="flex max-w-md flex-col gap-4">
+        <form
+          id="form"
+          className="flex max-w-md flex-col gap-4"
+          onSubmit={handleSubmit}
+        >
           <div className="mb-2 block">
             <Label htmlFor="name" value="Name" />
           </div>
@@ -74,7 +81,7 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
             type="text"
             sizing="md"
             onChange={(event) =>
-              handleChange<string>(event.target.value ?? "", setName)
+              handleChange<string>(event.target.value, setName)
             }
           />
           <div className="mb-2 block">
@@ -86,7 +93,7 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
             type="text"
             sizing="md"
             onChange={(event) =>
-              handleChange<string>(event.target.value ?? "", setLocation)
+              handleChange<string>(event.target.value, setLocation)
             }
           />
           <div className="mb-2 block">
@@ -97,28 +104,29 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
             id="startDate"
             minDate={new Date()}
             onSelectedDateChanged={(event) =>
-              handleChange<Date>(new Date(event) ?? "", setStartDate)
+              handleChange<Date>(event, setStartDate)
             }
           />
           <div className="mb-2 block">
             <Label htmlFor="endDate" value="End Date" />
           </div>
           <Datepicker
+            value={""}
             id="endDate"
-            minDate={new Date()}
+            minDate={startDate}
             onSelectedDateChanged={(event) => {
-              handleChange<Date>(event ?? "", setEndDate);
+              handleChange<Date>(event, setEndDate);
             }}
           />
           <div className="mb-2 block">
-            <Label htmlFor="description" value="Your message" />
+            <Label htmlFor="description" value="Description" />
           </div>
           <Textarea
             id="description"
-            placeholder="Description"
+            maxLength={500}
             rows={4}
             onChange={(event) =>
-              handleChange<string>(event.target.value ?? "", setDescription)
+              handleChange<string>(event.target.value, setDescription)
             }
           />
         </form>
@@ -127,7 +135,9 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
         <Button color="gray" onClick={handleClose}>
           Close
         </Button>
-        <Button onClick={handleSubmit}>Create</Button>
+        <Button form="form" type="submit">
+          Create
+        </Button>
       </Modal.Footer>
     </Modal>
   );
