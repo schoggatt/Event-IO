@@ -11,6 +11,7 @@ export function ConvertToEventModel(event: any) {
     createdAt: event.createdAt,
     updatedAt: event.updatedAt,
     userEvents: event.userEvents ?? [],
+    owner: event.owner,
   };
   return new EventModel(mappedEvent);
 }

@@ -1,6 +1,10 @@
 "use client";
 
-import { getEvents } from "@/redux/features/event.slice";
+import {
+  eventSliceState,
+  getEvents,
+  selectEventsByUserId,
+} from "@/redux/features/event.slice";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -15,18 +19,16 @@ export default function MyEvents() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const user = useAppSelector(userState);
-  const eventState = useAppSelector((state) => state.eventReducer.value);
+  const eventState = useAppSelector(eventSliceState);
+  const userEvents = useAppSelector((state) => selectEventsByUserId(state));
+
   const dispatch = useDispatch<AppDispatch>();
 
-  // TODO: I need to check how to manage change better than useEffect. Also, I should be able to use a custom selector.
   useEffect(() => {
     if (eventState.status === ResponseStatus.IDLE) {
       dispatch(getEvents());
     }
-    if (eventState.events.length > 0 && user) {
-      const userEvents = eventState.events.filter((event) =>
-        event.userEvents.some((userEvent) => userEvent.userId === user?.id)
-      );
+    if (userEvents.length > 0 && user) {
       setEvents(userEvents);
     }
   }, [eventState.status, dispatch, eventState.events, user]);

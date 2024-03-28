@@ -26,7 +26,7 @@ function UserTile(props: { user: User }) {
       </div>
       {isHovering ? (
         <div className="relative">
-          <p>{props.user.firstName + props.user.lastName}</p>
+          <p>{`${props.user.firstName} ${props.user.lastName}`}</p>
           <p>{props.user.email}</p>
         </div>
       ) : null}

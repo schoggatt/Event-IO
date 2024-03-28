@@ -7,12 +7,16 @@ import { UserEvent } from "../models/user-event";
 import { useDispatch } from "react-redux";
 import { addAttendee, removeAttendee } from "@/redux/features/event.slice";
 import { userState } from "@/redux/features/auth.slice";
+import { Button } from "flowbite-react";
+import UpdateEventModal from "./update-event-modal";
 
 interface IEventOverviewProps {
   event: Event;
 }
 // Probably should only show a max of like 10 RSVP'd users
 function EventOverview(props: IEventOverviewProps) {
+  const [isUpdateModalVisible, setIsUpdateModalVisible] = React.useState(false);
+
   const user = useAppSelector(userState);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -70,9 +74,15 @@ function EventOverview(props: IEventOverviewProps) {
     }
   }
 
+  function toggleVisible() {
+    setIsUpdateModalVisible(!isUpdateModalVisible);
+  }
+
   return (
     <div className="justify-center text-center w-1/2">
       <h1 className="text-4xl mb-3">{props.event.name}</h1>
+      <h3 className="text-2xl mb-3">{`${props.event.owner.firstName} ${props.event.owner.lastName}`}</h3>
+      <p className="mb-3">{props.event.location}</p>
       <p className="mb-3">{props.event.description}</p>
       <CountdownTimer targetDate={new Date(props.event.startDate)} />
       {getButtonState()}
@@ -81,6 +91,14 @@ function EventOverview(props: IEventOverviewProps) {
           <UserTile key={idx} user={userEvent.user!} />
         ))}
       </div>
+      {props.event.owner.id === user?.id && (
+        <Button onClick={toggleVisible}>Edit Event</Button>
+      )}
+      <UpdateEventModal
+        event={props.event}
+        isVisible={isUpdateModalVisible}
+        toggleVisible={toggleVisible}
+      />
     </div>
   );
 }

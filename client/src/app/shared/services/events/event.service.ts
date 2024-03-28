@@ -5,6 +5,7 @@ import { UserEvent } from "../../models/user-event";
 
 interface IEventService {
   createEvent(event: Event): Promise<Event>;
+  updateEvent(event: Event): Promise<Event>;
   getEvents(): Promise<Event[]>;
   addAttendee(userEvent: UserEvent): Promise<Event>;
 }
@@ -17,6 +18,17 @@ export default class EventService extends BaseService implements IEventService {
   createEvent(event: Event): Promise<Event> {
     return axios
       .post(`${this.apiEndpoint}/`, event)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  updateEvent(event: Event): Promise<Event> {
+    return axios
+      .put(`${this.apiEndpoint}/`, event)
       .then((res) => {
         return res.data;
       })

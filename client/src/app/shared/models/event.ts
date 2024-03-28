@@ -1,3 +1,4 @@
+import { User } from "./user";
 import { UserEvent } from "./user-event";
 
 export interface Event {
@@ -11,4 +12,5 @@ export interface Event {
   updatedAt: Date;
 
   userEvents: UserEvent[];
+  owner: User;
 }

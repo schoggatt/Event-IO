@@ -22,6 +22,7 @@ class EventRepository {
   async retrieveAll() {
     const events = await this.prisma.events.findMany({
       include: {
+        owner: true,
         userEvents: {
           include: {
             user: true,
@@ -36,6 +37,7 @@ class EventRepository {
     const event = await this.prisma.events.findUnique({
       where: { id: eventId },
       include: {
+        owner: true,
         userEvents: {
           include: {
             user: true,
@@ -46,8 +48,8 @@ class EventRepository {
     return convertToEventModel(event);
   }
 
-  update(event: IEvent) {
-    this.prisma.events.update({
+  async update(event: IEvent) {
+    const updatedEvent = await this.prisma.events.update({
       where: { id: event.id },
       data: {
         name: event.name,
@@ -58,9 +60,17 @@ class EventRepository {
         createdAt: event.createdAt,
         updatedAt: event.updatedAt,
       },
+      include: {
+        owner: true,
+        userEvents: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
 
-    return event;
+    return convertToEventModel(updatedEvent);
   }
 
   delete(eventId: number) {

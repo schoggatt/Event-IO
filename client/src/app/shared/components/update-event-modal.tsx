@@ -11,37 +11,40 @@ import {
   Textarea,
 } from "flowbite-react";
 import { useDispatch } from "react-redux";
-import { createEvent } from "@/redux/features/event.slice";
+import { updateEvent } from "@/redux/features/event.slice";
 
-export interface ICreateEventModalProps {
+export interface IUpdateEventModalProps {
+  event: Event;
   isVisible: boolean;
   toggleVisible: () => void;
 }
 
-export default function CreateEventModal(props: ICreateEventModalProps) {
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-  const [description, setDescription] = useState("");
+export default function UpdateEventModal(props: IUpdateEventModalProps) {
+  const [name, setName] = useState(props.event.name);
+  const [location, setLocation] = useState(props.event.location);
+  const [startDate, setStartDate] = useState(new Date(props.event.startDate));
+  const [endDate, setEndDate] = useState<Date | undefined>(
+    new Date(props.event.endDate)
+  );
+  const [description, setDescription] = useState(props.event.description);
 
   const user = useAppSelector(userState);
   const dispatch = useDispatch<AppDispatch>();
 
-  function createNewEvent() {
-    const event: Event = {
-      id: 0,
+  function updateExistingEvent() {
+    const updatedEvent: Event = {
+      id: props.event.id,
       name: name,
       description: description,
       startDate: startDate,
       endDate: endDate ?? startDate,
       location: location,
-      createdAt: new Date(),
+      createdAt: props.event.createdAt,
       updatedAt: new Date(),
-      userEvents: [],
-      owner: user!, // TODO: I need a toast slice to handle stuff like this
+      userEvents: props.event.userEvents,
+      owner: props.event.owner,
     };
-    dispatch(createEvent(event));
+    dispatch(updateEvent(updatedEvent));
   }
 
   function handleChange<T>(
@@ -56,7 +59,7 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
   }
 
   function handleSubmit() {
-    createNewEvent();
+    updateExistingEvent();
     props.toggleVisible();
   }
 
@@ -66,7 +69,7 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
 
   return (
     <Modal show={props.isVisible} size="md" popup onClose={handleClose}>
-      <Modal.Header>Create Event</Modal.Header>
+      <Modal.Header>Update Event</Modal.Header>
       <Modal.Body>
         <form
           id="form"
@@ -81,6 +84,7 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
             id="name"
             type="text"
             sizing="md"
+            defaultValue={name}
             onChange={(event) =>
               handleChange<string>(event.target.value, setName)
             }
@@ -93,6 +97,7 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
             id="location"
             type="text"
             sizing="md"
+            defaultValue={location}
             onChange={(event) =>
               handleChange<string>(event.target.value, setLocation)
             }
@@ -104,6 +109,7 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
             required
             id="startDate"
             minDate={new Date()}
+            defaultDate={startDate}
             onSelectedDateChanged={(event) =>
               handleChange<Date>(event, setStartDate)
             }
@@ -112,9 +118,9 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
             <Label htmlFor="endDate" value="End Date" />
           </div>
           <Datepicker
-            value={""}
             id="endDate"
             minDate={startDate}
+            defaultDate={endDate}
             onSelectedDateChanged={(event) => {
               handleChange<Date>(event, setEndDate);
             }}
@@ -126,6 +132,7 @@ export default function CreateEventModal(props: ICreateEventModalProps) {
             id="description"
             maxLength={500}
             rows={4}
+            defaultValue={description}
             onChange={(event) =>
               handleChange<string>(event.target.value, setDescription)
             }
