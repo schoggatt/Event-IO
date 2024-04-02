@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { authenticate } from "@/redux/features/auth.slice";
 import { GoogleUser } from "./api/auth/models/google-user";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
@@ -26,6 +28,18 @@ export default function App({ children }: { children: React.ReactNode }) {
 
   return (
     <main className="flex flex-col items-center pr-40 pl-40 pt-4 text-center">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       {children}
     </main>
   );

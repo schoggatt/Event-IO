@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { logout } from "@/redux/features/auth.slice";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { Button } from "flowbite-react";
+import { HiOutlineArrowRight } from "react-icons/hi";
 
 export default function NavigationHeader() {
   const authState = useAppSelector((state) => state.authReducer.value);
@@ -36,44 +38,18 @@ export default function NavigationHeader() {
           ) : (
             <p className="text-white mr-5">{authState.user.email}</p>
           )}
-          <button
-            onClick={handleLogout}
-            className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 text-black"
-          >
+          <Button onClick={handleLogout}>
             Logout
-            <svg
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              className="w-4 h-4 ml-1"
-              viewBox="0 0 24 24"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-          </button>
+            <HiOutlineArrowRight className="w-4 h-4 ml-2" />
+          </Button>
         </>
       );
     } else {
       return (
-        <button
-          className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 text-black"
-          onClick={handleLogin}
-        >
+        <Button onClick={handleLogin}>
           Login
-          <svg
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            className="w-4 h-4 ml-1"
-            viewBox="0 0 24 24"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-          </svg>
-        </button>
+          <HiOutlineArrowRight className="w-4 h-4 ml-2" />
+        </Button>
       );
     }
   }
