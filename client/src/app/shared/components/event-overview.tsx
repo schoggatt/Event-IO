@@ -45,7 +45,6 @@ function EventOverview(props: IEventOverviewProps) {
     }
   }
 
-  // TODO: Maybe there is a better way to do this
   function getButtonState() {
     if (user) {
       if (
@@ -53,23 +52,9 @@ function EventOverview(props: IEventOverviewProps) {
           (userEvent) => userEvent.userId === user.id
         ).length === 0
       ) {
-        return (
-          <button
-            className="inline-flex items-center m-4 px-3 py-2 text-sm font-medium text-center text-white bg-yellow-500 rounded-lg hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:bg-yellow-600 dark:hover:bg-yellow-500 dark:focus:ring-yellow-800"
-            onClick={() => handleJoinEvent()}
-          >
-            Join Event
-          </button>
-        );
+        return <Button onClick={() => handleJoinEvent()}>Join Event</Button>;
       } else {
-        return (
-          <button
-            className="inline-flex items-center m-4 px-3 py-2 text-sm font-medium text-center text-white bg-yellow-500 rounded-lg hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:bg-yellow-600 dark:hover:bg-yellow-500 dark:focus:ring-yellow-800"
-            onClick={() => handleLeaveEvent()}
-          >
-            Leave Event
-          </button>
-        );
+        return <Button onClick={() => handleLeaveEvent()}>Leave Event</Button>;
       }
     }
   }
