@@ -15,6 +15,14 @@ class EventRepository {
         startDate: event.startDate,
         endDate: event.endDate,
       },
+      include: {
+        owner: true,
+        userEvents: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
     return convertToEventModel(newEvent);
   }
@@ -73,9 +81,19 @@ class EventRepository {
     return convertToEventModel(updatedEvent);
   }
 
-  delete(eventId: number) {
-    const event = this.prisma.events.delete({ where: { id: eventId } });
-    return event;
+  async delete(eventId: number) {
+    const event = await this.prisma.events.delete({
+      where: { id: eventId },
+      include: {
+        owner: true,
+        userEvents: {
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+    return convertToEventModel(event);
   }
 
   async addAttendee(userEvent: IUserEvent) {

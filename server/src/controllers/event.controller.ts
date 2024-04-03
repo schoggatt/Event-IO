@@ -69,16 +69,14 @@ export default class EventController {
     try {
       const deletedEvent = await eventRepository.delete(eventId);
       if (deletedEvent) {
-        res
-          .status(200)
-          .json({ message: "Event deleted successfully", deletedEvent });
+        res.status(200).json(deletedEvent);
       } else {
         res.status(404).json({ message: "Event not found" });
       }
     } catch (err: any) {
       res
         .status(500)
-        .json({ message: "Some error occurred while retrieving events." });
+        .json({ message: "Some error occurred while deleting the event." });
     }
   }
 

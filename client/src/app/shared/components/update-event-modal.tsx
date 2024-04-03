@@ -11,7 +11,9 @@ import {
   Textarea,
 } from "flowbite-react";
 import { useDispatch } from "react-redux";
-import { updateEvent } from "@/redux/features/event.slice";
+import { deleteEvent, updateEvent } from "@/redux/features/event.slice";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export interface IUpdateEventModalProps {
   event: Event;
@@ -27,6 +29,8 @@ export default function UpdateEventModal(props: IUpdateEventModalProps) {
     new Date(props.event.endDate)
   );
   const [description, setDescription] = useState(props.event.description);
+
+  const router = useRouter();
 
   const user = useAppSelector(userState);
   const dispatch = useDispatch<AppDispatch>();
@@ -47,6 +51,10 @@ export default function UpdateEventModal(props: IUpdateEventModalProps) {
     dispatch(updateEvent(updatedEvent));
   }
 
+  async function deleteExistingEvent() {
+    await dispatch(deleteEvent(props.event.id));
+  }
+
   function handleChange<T>(
     value: T | undefined,
     setter:
@@ -59,8 +67,24 @@ export default function UpdateEventModal(props: IUpdateEventModalProps) {
   }
 
   function handleSubmit() {
-    updateExistingEvent();
-    props.toggleVisible();
+    try {
+      updateExistingEvent();
+      props.toggleVisible();
+      toast.success("Event updated successfully");
+    } catch (error) {
+      toast.error("Failed to update event");
+    }
+  }
+
+  async function handleDelete() {
+    try {
+      await deleteExistingEvent();
+      props.toggleVisible();
+      toast.success("Event deleted successfully");
+      router.push("/myevents");
+    } catch (error) {
+      toast.error("Failed to delete event");
+    }
   }
 
   function handleClose() {
@@ -143,8 +167,11 @@ export default function UpdateEventModal(props: IUpdateEventModalProps) {
         <Button color="gray" onClick={handleClose}>
           Close
         </Button>
+        <Button color="red" onClick={handleDelete}>
+          Delete
+        </Button>
         <Button form="form" type="submit">
-          Create
+          Save
         </Button>
       </Modal.Footer>
     </Modal>

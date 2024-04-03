@@ -25,6 +25,7 @@ export default function Event({ params }: { params: { eventId: string } }) {
     }
   }, [dispatch, eventState.status, eventState.events, params.eventId]);
 
+  // TODO: Need to add a boundary here for if it no longer exists
   return (
     <div className="flex justify-center text-center align-center">
       {event && <EventOverview event={event} />}

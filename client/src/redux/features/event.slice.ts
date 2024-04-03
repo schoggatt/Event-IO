@@ -47,6 +47,13 @@ export const getEvents = createAsyncThunk("events/get", async () => {
   return await eventService.getEvents();
 });
 
+export const deleteEvent = createAsyncThunk(
+  "events/delete",
+  async (eventId: number) => {
+    return await eventService.deleteEvent(eventId);
+  }
+);
+
 export const addAttendee = createAsyncThunk(
   "add/attendee",
   async (userEvent: UserEvent) => {
@@ -81,6 +88,8 @@ export const event = createSlice({
       .addCase(createEvent.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;
         state.value.error = action.error.message;
+
+        throw new Error(action.error.message);
       });
 
     builder
@@ -102,6 +111,25 @@ export const event = createSlice({
       .addCase(updateEvent.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;
         state.value.error = action.error.message;
+
+        throw new Error(action.error.message);
+      });
+
+    builder
+      .addCase(deleteEvent.pending, (state, action) => {
+        state.value.status = ResponseStatus.LOADING;
+      })
+      .addCase(deleteEvent.fulfilled, (state, action) => {
+        state.value.status = ResponseStatus.SUCCEEDED;
+        state.value.events = state.value.events.filter(
+          (event) => event.id !== action.payload.id
+        );
+      })
+      .addCase(deleteEvent.rejected, (state, action) => {
+        state.value.status = ResponseStatus.FAILED;
+        state.value.error = action.error.message;
+
+        throw new Error(action.error.message);
       });
 
     builder
@@ -115,6 +143,8 @@ export const event = createSlice({
       .addCase(getEvents.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;
         state.value.error = action.error.message;
+
+        throw new Error(action.error.message);
       });
 
     builder
@@ -131,6 +161,8 @@ export const event = createSlice({
       .addCase(addAttendee.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;
         state.value.error = action.error.message;
+
+        throw new Error(action.error.message);
       });
 
     builder
@@ -147,6 +179,8 @@ export const event = createSlice({
       .addCase(removeAttendee.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;
         state.value.error = action.error.message;
+
+        throw new Error(action.error.message);
       });
   },
 });
