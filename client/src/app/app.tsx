@@ -27,7 +27,7 @@ export default function App({ children }: { children: React.ReactNode }) {
   }, [session?.user, dispatch]);
 
   return (
-    <main className="flex flex-col items-center pr-40 pl-40 pt-4 text-center">
+    <main className="flex flex-col pr-40 pl-40 pt-4 w-full">
       <ToastContainer
         position="top-right"
         autoClose={3000}

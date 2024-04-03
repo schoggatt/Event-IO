@@ -1,7 +1,6 @@
 import React from "react";
 import { Event } from "../models/event";
 import CountdownTimer from "./countdown-timer";
-import UserTile from "./user-tile";
 import { AppDispatch, useAppSelector } from "@/redux/store";
 import { UserEvent } from "../models/user-event";
 import { useDispatch } from "react-redux";
@@ -9,6 +8,7 @@ import { addAttendee, removeAttendee } from "@/redux/features/event.slice";
 import { userState } from "@/redux/features/auth.slice";
 import { Button } from "flowbite-react";
 import UpdateEventModal from "./update-event-modal";
+import { UserTiles } from "./user-tiles";
 
 interface IEventOverviewProps {
   event: Event;
@@ -52,9 +52,17 @@ function EventOverview(props: IEventOverviewProps) {
           (userEvent) => userEvent.userId === user.id
         ).length === 0
       ) {
-        return <Button onClick={() => handleJoinEvent()}>Join Event</Button>;
+        return (
+          <Button className="w-[8em]" onClick={() => handleJoinEvent()}>
+            Join Event
+          </Button>
+        );
       } else {
-        return <Button onClick={() => handleLeaveEvent()}>Leave Event</Button>;
+        return (
+          <Button className="w-[8em]" onClick={() => handleLeaveEvent()}>
+            Leave Event
+          </Button>
+        );
       }
     }
   }
@@ -70,15 +78,21 @@ function EventOverview(props: IEventOverviewProps) {
       <p className="mb-3">{props.event.location}</p>
       <p className="mb-3">{props.event.description}</p>
       <CountdownTimer targetDate={new Date(props.event.startDate)} />
-      {getButtonState()}
-      <div className="flex flex-row justify-center mt-4">
-        {props.event.userEvents.map((userEvent, idx) => (
-          <UserTile key={idx} user={userEvent.user!} />
-        ))}
+      <div className="flex flex-row justify-center mt-4 mb-4">
+        <UserTiles
+          users={props.event.userEvents.map((userEvent) => userEvent.user!)}
+        />
       </div>
-      {props.event.owner.id === user?.id && (
-        <Button onClick={toggleVisible}>Edit Event</Button>
-      )}
+      <div className="flex justify-center">
+        <div>{getButtonState()}</div>
+        {props.event.owner.id === user?.id && (
+          <div className="ml-2">
+            <Button className="w-[8em]" onClick={toggleVisible}>
+              Edit Event
+            </Button>
+          </div>
+        )}
+      </div>
       <UpdateEventModal
         event={props.event}
         isVisible={isUpdateModalVisible}

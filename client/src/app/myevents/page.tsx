@@ -14,6 +14,7 @@ import { userState } from "@/redux/features/auth.slice";
 import { Event } from "../shared/models/event";
 import CreateEventModal from "../shared/components/create-event-modal";
 import { Button } from "flowbite-react";
+import { HiPlus } from "react-icons/hi";
 
 export default function MyEvents() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -53,6 +54,7 @@ export default function MyEvents() {
     <div>
       <Button className="mr-2 mt-2 mb-2" onClick={toggleCreateModal}>
         Create Event
+        <HiPlus className="ml-2"></HiPlus>
       </Button>
       <CreateEventModal
         toggleVisible={toggleCreateModal}

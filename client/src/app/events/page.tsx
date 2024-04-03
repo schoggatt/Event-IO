@@ -32,7 +32,6 @@ export default function Events() {
     }
   }
 
-  // TODO: Will automatically tile by 5 rows and then us pagination.
   return (
     <div className="w-full">
       <div className="pb-4">
