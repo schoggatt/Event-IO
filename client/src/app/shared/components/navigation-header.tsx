@@ -69,9 +69,6 @@ export default function NavigationHeader() {
               My Events
             </Link>
           )}
-          <Link className="hover:text-gray-600" href="/contactme">
-            Contact
-          </Link>
         </nav>
         <Link
           className="flex order-first lg:order-none lg:w-1/5 title-font font-medium items-center text-white lg:items-center lg:justify-center"

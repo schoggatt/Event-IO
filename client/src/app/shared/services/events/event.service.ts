@@ -48,6 +48,17 @@ export default class EventService extends BaseService implements IEventService {
       });
   }
 
+  deleteEvent(eventId: number): Promise<Event> {
+    return axios
+      .delete(`${this.apiEndpoint}/${eventId}`)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   addAttendee(userEvent: UserEvent): Promise<Event> {
     return axios
       .post(`${this.apiEndpoint}/add/attendee`, userEvent)
