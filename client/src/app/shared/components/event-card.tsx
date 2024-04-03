@@ -14,7 +14,7 @@ export default function EventCard(props: ICardProps) {
   const router = useRouter();
 
   return (
-    <Card>
+    <Card className="h-[22em]">
       <Link href={`events/${props.event.id}`}>
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           {props.event.name}
@@ -28,7 +28,7 @@ export default function EventCard(props: ICardProps) {
           ? props.event.description.slice(0, 200).trimEnd() + "..."
           : props.event.description}
       </p>
-      <Button onClick={() => router.push(`events/${props.event.id}`)}>
+      <Button onClick={() => router.push(`/events/${props.event.id}`)}>
         Read more
         <HiOutlineArrowRight className="w-4 h-4 ml-2" />
       </Button>

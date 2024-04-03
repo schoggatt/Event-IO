@@ -27,7 +27,7 @@ export default function Event({ params }: { params: { eventId: string } }) {
 
   // TODO: Need to add a boundary here for if it no longer exists
   return (
-    <div className="flex justify-center text-center align-center">
+    <div className="flex justify-center text-center align-center w-full">
       {event && <EventOverview event={event} />}
     </div>
   );

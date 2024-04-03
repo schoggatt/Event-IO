@@ -65,9 +65,14 @@ export default function NavigationHeader() {
             Events
           </Link>
           {authState.user && (
-            <Link className="mr-5 hover:text-gray-600" href="/myevents">
-              My Events
-            </Link>
+            <>
+              <Link className="mr-5 hover:text-gray-600" href="/myevents">
+                My Events
+              </Link>
+              <Link className="hover:text-gray-600" href="/myevents/timeline">
+                My Timeline
+              </Link>
+            </>
           )}
         </nav>
         <Link
