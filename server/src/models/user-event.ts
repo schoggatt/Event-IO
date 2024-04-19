@@ -1,4 +1,5 @@
 import { IBaseEntity } from "./base";
+import { ConvertToUserModel } from "./extensions/user.extension";
 import { IUser, UserModel } from "./user";
 
 export interface IUserEvent extends IBaseEntity {
@@ -25,6 +26,8 @@ export class UserEventModel implements IUserEvent {
     this.userId = userEvent.userId;
     this.createdAt = userEvent.createdAt;
     this.updatedAt = userEvent.updatedAt;
-    this.user = userEvent.user ? new UserModel(userEvent.user) : null;
+    this.user = userEvent.user
+      ? new UserModel(ConvertToUserModel(userEvent.user))
+      : null;
   }
 }

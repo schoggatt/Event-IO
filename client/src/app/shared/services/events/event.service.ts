@@ -1,7 +1,8 @@
 import axios from "axios";
-import { Event } from "../../models/event";
+import { Event, EventSchema } from "../../models/event";
 import BaseService from "../base.service";
 import { UserEvent } from "../../models/user-event";
+import { z } from "zod";
 
 interface IEventService {
   createEvent(event: Event): Promise<Event>;
@@ -17,67 +18,45 @@ export default class EventService extends BaseService implements IEventService {
 
   createEvent(event: Event): Promise<Event> {
     return axios
-      .post(`${this.apiEndpoint}/`, event)
+      .post(`${this.apiEndpoint}/`, event, this.config)
       .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        console.log(err);
+        return EventSchema.parse(res.data);
       });
   }
 
   updateEvent(event: Event): Promise<Event> {
-    return axios
-      .put(`${this.apiEndpoint}/`, event)
-      .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    return axios.put(`${this.apiEndpoint}/`, event, this.config).then((res) => {
+      return EventSchema.parse(res.data);
+    });
   }
 
   getEvents(): Promise<Event[]> {
-    return axios
-      .get(`${this.apiEndpoint}/`)
-      .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    return axios.get(`${this.apiEndpoint}/`, this.config).then((res) => {
+      return z.array(EventSchema).parse(res.data);
+    });
   }
 
   deleteEvent(eventId: number): Promise<Event> {
     return axios
-      .delete(`${this.apiEndpoint}/${eventId}`)
+      .delete(`${this.apiEndpoint}/${eventId}`, this.config)
       .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        console.log(err);
+        return EventSchema.parse(res.data);
       });
   }
 
   addAttendee(userEvent: UserEvent): Promise<Event> {
     return axios
-      .post(`${this.apiEndpoint}/add/attendee`, userEvent)
+      .post(`${this.apiEndpoint}/add/attendee`, userEvent, this.config)
       .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        console.log(err);
+        return EventSchema.parse(res.data);
       });
   }
 
   removeAttendee(userEventId: number): Promise<Event> {
     return axios
-      .delete(`${this.apiEndpoint}/remove/attendee/${userEventId}`)
+      .delete(`${this.apiEndpoint}/remove/attendee/${userEventId}`, this.config)
       .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        console.log(err);
+        return EventSchema.parse(res.data);
       });
   }
 }

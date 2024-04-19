@@ -1,9 +1,11 @@
-import { User } from "./user";
+import { UserSchema } from "./user";
+import { z } from "zod";
 
-export interface UserEvent {
-  id: number;
-  eventId: number;
-  userId: number;
+export const UserEventSchema = z.object({
+  id: z.number(),
+  eventId: z.number(),
+  userId: z.number(),
+  user: UserSchema.nullable(),
+});
 
-  user?: User | null;
-}
+export type UserEvent = z.infer<typeof UserEventSchema>;

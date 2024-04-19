@@ -1,4 +1,5 @@
 import { IBaseEntity, IBaseModel } from "./base";
+import { IRole, RoleModel } from "./role";
 
 export interface IUser extends IBaseEntity {
   id: number;
@@ -6,15 +7,16 @@ export interface IUser extends IBaseEntity {
   image?: string | null;
   firstName: string;
   lastName: string;
+  roles: IRole[];
 }
 
-// TODO: This inheritance needs to be fixed and more clear.
 export class UserModel implements IUser {
   id: number;
   email: string;
   image?: string | null;
   firstName: string;
   lastName: string;
+  roles: RoleModel[];
   createdAt: Date;
   updatedAt: Date;
 
@@ -26,5 +28,7 @@ export class UserModel implements IUser {
     this.lastName = user.lastName;
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;
+
+    this.roles = user.roles.map((role) => new RoleModel(role));
   }
 }

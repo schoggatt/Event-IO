@@ -1,7 +1,8 @@
-import { User } from "@/app/shared/models/user";
+import { User, UserSchema } from "@/app/shared/models/user";
 import axios from "axios";
 import BaseService from "../base.service";
 import { GoogleUser } from "@/app/api/auth/models/google-user";
+import { z } from "zod";
 
 interface IUserService {
   getUserById(id: number): Promise<User>;
@@ -16,33 +17,22 @@ export default class UserService extends BaseService implements IUserService {
     super("users");
   }
 
-  authenticateUser(user: GoogleUser): Promise<User> {
+  authenticateUser(user: GoogleUser): Promise<string> {
     return axios
-      .post(`${this.apiEndpoint}/authenticate`, user)
+      .post(`${this.apiEndpoint}/authenticate`, user, this.config)
       .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        console.log(err);
+        return z.string().parse(res.data);
       });
   }
 
   getUserById(id: number): Promise<User> {
-    return axios
-      .get(`${this.apiEndpoint}/${id}`)
-      .then((res) => res.data)
-      .catch((err) => {
-        console.log(err);
-      });
+    return axios.get(`${this.apiEndpoint}/${id}`).then((res) => res.data);
   }
 
   getUserByEmail(email: string): Promise<User> {
     return axios
-      .get(`${this.apiEndpoint}/login/${email}`)
-      .then((res) => res.data)
-      .catch((err) => {
-        console.log(err);
-      });
+      .get(`${this.apiEndpoint}/login/${email}`, this.config)
+      .then((res) => UserSchema.parse(res.data));
   }
 
   getUsers(): Promise<User[]> {
@@ -55,12 +45,9 @@ export default class UserService extends BaseService implements IUserService {
 
   createUser(user: User): Promise<User> {
     return axios
-      .post(`${this.apiEndpoint}/create`, user)
+      .post(`${this.apiEndpoint}/create`, user, this.config)
       .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        console.log(err);
+        return UserSchema.parse(res.data);
       });
   }
 }

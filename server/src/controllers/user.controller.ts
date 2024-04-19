@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import userRepository from "../repositories/user.repository";
 import { IUser, UserModel } from "../models/user";
 import { IGoogleUser } from "../models/google-user";
+import authRepository from "../repositories/auth.repository";
 
 // Need to figure out how to get a return type of User for Prisma client calls
 export default class UserController {
@@ -73,13 +74,22 @@ export default class UserController {
 
   async authenticateUser(req: Request, res: Response) {
     const user: IGoogleUser = req.body;
+    if (!user) {
+      return res
+        .status(400)
+        .json({ type: "Bad Request", message: "User data is empty." });
+    }
     try {
       const existingUser = await userRepository.retrieveByEmail(user.email);
       if (existingUser) {
-        return res.status(200).json(new UserModel(existingUser as IUser));
+        const accessToken = await authRepository.generateToken(existingUser);
+        return res.status(200).json(accessToken);
       }
       const newUser = await userRepository.create(user);
-      return res.status(200).json(new UserModel(newUser as IUser));
+      if (newUser) {
+        const accessToken = await authRepository.generateToken(newUser);
+        return res.status(200).json(accessToken);
+      }
     } catch (err) {
       res
         .status(500)

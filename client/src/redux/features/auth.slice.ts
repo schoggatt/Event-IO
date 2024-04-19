@@ -1,10 +1,16 @@
-import { User } from "@/app/shared/models/user";
+import { User, UserSchema } from "@/app/shared/models/user";
 import UserService from "@/app/shared/services/auth/user.service";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ResponseStatus } from "../models/response-status";
 import { signOut } from "next-auth/react";
 import { GoogleUser } from "@/app/api/auth/models/google-user";
 import { RootState } from "../store";
+import jwt from "jsonwebtoken";
+import { z } from "zod";
+
+const AccessJwtPayloadSchema = z.object({
+  user: UserSchema,
+});
 
 type InitialState = {
   value: AuthState;
@@ -51,7 +57,12 @@ export const auth = createSlice({
       .addCase(authenticate.fulfilled, (state, action) => {
         state.value.status = ResponseStatus.SUCCEEDED;
         state.value.isAuthenticated = true;
-        state.value.user = action.payload;
+
+        const decodedToken = AccessJwtPayloadSchema.parse(
+          jwt.decode(action.payload)
+        );
+        localStorage.setItem("accessToken", action.payload);
+        state.value.user = decodedToken.user as User;
       })
       .addCase(authenticate.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;

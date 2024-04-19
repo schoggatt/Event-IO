@@ -1,8 +1,13 @@
-// Maybe should create a special contract for new users.
-export interface User {
-  id: number | null;
-  email: string;
-  image?: string | null;
-  firstName: string;
-  lastName: string;
-}
+import { RoleSchema } from "./role";
+import { z } from "zod";
+
+export const UserSchema = z.object({
+  id: z.number().nullable(),
+  email: z.string(),
+  image: z.string().nullable(),
+  firstName: z.string(),
+  lastName: z.string(),
+  roles: z.array(RoleSchema),
+});
+
+export type User = z.infer<typeof UserSchema>;

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import UserController from "../controllers/user.controller";
+import { verifyPermissions } from "../middleware/verifyPermissions";
 
 class UserRoutes {
   router = Router();

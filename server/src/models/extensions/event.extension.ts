@@ -1,4 +1,5 @@
 import { EventModel, IEvent } from "../event";
+import { ConvertToUserModel } from "./user.extension";
 
 export function ConvertToEventModel(event: any) {
   const mappedEvent: IEvent = {
@@ -11,7 +12,7 @@ export function ConvertToEventModel(event: any) {
     createdAt: event.createdAt,
     updatedAt: event.updatedAt,
     userEvents: event.userEvents ?? [],
-    owner: event.owner,
+    owner: ConvertToUserModel(event.owner),
   };
   return new EventModel(mappedEvent);
 }
