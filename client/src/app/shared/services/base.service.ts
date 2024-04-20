@@ -1,24 +1,11 @@
-export default class BaseService {
-  private readonly baseUrl: string = `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}`;
-  public readonly apiSuffix: string;
-  public readonly apiEndpoint: string;
+import { api } from "./api";
 
-  public readonly config: any;
+export default class BaseService {
+  public readonly apiSuffix: string;
+
+  public readonly api = api;
 
   constructor(apiSuffix: string) {
-    if (typeof window !== "undefined") {
-      this.config = {
-        headers: {
-          authorization:
-            localStorage.getItem("accessToken") &&
-            localStorage.getItem("accessToken") !== "undefined"
-              ? `Bearer ${localStorage.getItem("accessToken")}`
-              : null,
-        },
-      };
-    }
-
     this.apiSuffix = apiSuffix;
-    this.apiEndpoint = `${this.baseUrl}/api/${this.apiSuffix}`;
   }
 }

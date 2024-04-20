@@ -75,6 +75,9 @@ class UserRoutes {
      *         description: Authenticates user to either login or create a new account.
      */
     this.router.post("/authenticate", this.controller.authenticateUser);
+
+    // TODO: Move to auth controller
+    this.router.post("/refresh", this.controller.refreshToken);
   }
 }
 

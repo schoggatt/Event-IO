@@ -3,10 +3,15 @@ import axios from "axios";
 import BaseService from "../base.service";
 import { GoogleUser } from "@/app/api/auth/models/google-user";
 import { z } from "zod";
+import jwt from "jsonwebtoken";
+
+const AccessJwtPayloadSchema = z.object({
+  user: UserSchema,
+});
 
 interface IUserService {
+  authenticateUser(user: GoogleUser): Promise<User>;
   getUserById(id: number): Promise<User>;
-  getUserByEmail(email: string): Promise<User>;
   getUsers(): Promise<User[]>;
   updateUser(user: User): Promise<User>;
   createUser(user: User): Promise<User>;
@@ -14,25 +19,24 @@ interface IUserService {
 
 export default class UserService extends BaseService implements IUserService {
   constructor() {
-    super("users");
+    super("/users");
   }
 
-  authenticateUser(user: GoogleUser): Promise<string> {
-    return axios
-      .post(`${this.apiEndpoint}/authenticate`, user, this.config)
-      .then((res) => {
-        return z.string().parse(res.data);
-      });
+  // TODO: Move this to the auth service
+  authenticateUser(user: GoogleUser): Promise<User> {
+    return this.api.post(`${this.apiSuffix}/authenticate`, user).then((res) => {
+      const accessToken = z.string().parse(res.data);
+      localStorage.setItem("accessToken", accessToken);
+
+      const decodedToken = AccessJwtPayloadSchema.parse(
+        jwt.decode(accessToken)
+      );
+      return decodedToken.user;
+    });
   }
 
   getUserById(id: number): Promise<User> {
-    return axios.get(`${this.apiEndpoint}/${id}`).then((res) => res.data);
-  }
-
-  getUserByEmail(email: string): Promise<User> {
-    return axios
-      .get(`${this.apiEndpoint}/login/${email}`, this.config)
-      .then((res) => UserSchema.parse(res.data));
+    return this.api.get(`${this.apiSuffix}/${id}`).then((res) => res.data);
   }
 
   getUsers(): Promise<User[]> {
@@ -44,10 +48,8 @@ export default class UserService extends BaseService implements IUserService {
   }
 
   createUser(user: User): Promise<User> {
-    return axios
-      .post(`${this.apiEndpoint}/create`, user, this.config)
-      .then((res) => {
-        return UserSchema.parse(res.data);
-      });
+    return this.api.post(`${this.apiSuffix}/create`, user).then((res) => {
+      return UserSchema.parse(res.data);
+    });
   }
 }

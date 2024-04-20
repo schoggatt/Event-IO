@@ -27,9 +27,9 @@ export function verifyJWT(
     req.user = decodedToken.user;
     next();
   } catch (err) {
-    return res.status(400).json({
-      type: "Bad Request",
-      message: "Invalid token. Please log in again to get a new token.",
+    return res.status(401).json({
+      type: "Unauthorized",
+      message: `Invalid token: ${err}`,
     });
   }
 }

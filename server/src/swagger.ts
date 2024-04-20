@@ -13,7 +13,7 @@ const options: swaggerJSDoc.Options = {
     },
     servers: [
       {
-        url: "http://localhost:8080",
+        url: process.env.SERVER_ORIGIN_URL,
       },
     ],
   },
@@ -22,7 +22,7 @@ const options: swaggerJSDoc.Options = {
 
 const swaggerSpec = swaggerJSDoc(options);
 
-function swaggerDocs(app: Express, port: number) {
+function swaggerDocs(app: Express) {
   app.use("/api/swagger", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
   app.get("swagger.json", (req: Request, res: Response) => {
@@ -30,7 +30,7 @@ function swaggerDocs(app: Express, port: number) {
     res.send(swaggerSpec);
   });
 
-  console.log(`Docs available at http://localhost:${port}/api/swagger`);
+  console.log(`Docs available at ${process.env.SERVER_ORIGIN_URL}/api/swagger`);
 }
 
 export default swaggerDocs;

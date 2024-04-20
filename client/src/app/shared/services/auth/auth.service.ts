@@ -4,6 +4,6 @@ interface IAuthService {}
 
 export default class AuthService extends BaseService implements IAuthService {
   constructor() {
-    super("auth");
+    super("/auth");
   }
 }

@@ -8,10 +8,6 @@ import { RootState } from "../store";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 
-const AccessJwtPayloadSchema = z.object({
-  user: UserSchema,
-});
-
 type InitialState = {
   value: AuthState;
 };
@@ -58,11 +54,7 @@ export const auth = createSlice({
         state.value.status = ResponseStatus.SUCCEEDED;
         state.value.isAuthenticated = true;
 
-        const decodedToken = AccessJwtPayloadSchema.parse(
-          jwt.decode(action.payload)
-        );
-        localStorage.setItem("accessToken", action.payload);
-        state.value.user = decodedToken.user as User;
+        state.value.user = action.payload;
       })
       .addCase(authenticate.rejected, (state, action) => {
         state.value.status = ResponseStatus.FAILED;
